@@ -1,0 +1,52 @@
+vehicle:
+  mesh_name: "applied:car"
+  shape:
+    front_edge_to_center: 3.85
+    back_edge_to_center: 1.11
+    left_edge_to_center: 1.07
+    right_edge_to_center: 1.07
+    height: 1.478
+  external: {}
+  wheels:
+  - name: "wheel_fr"
+    radius: 0.2
+  - name: "wheel_fl"
+    radius: 0.2
+  - name: "wheel_rr"
+    radius: 0.2
+  - name: "wheel_rl"
+    radius: 0.2
+  sensors:
+    wheel_speed_sensors:
+    - name: "Wheel Speed Sensor"
+      sensor_filters:
+      - noise_filter:
+          property_specs: ["rpm"]
+          seed: 0
+          gaussian:
+            mean: 0.0
+            std_dev: 2.5
+    imu_sensors:
+    - name: "IMU Sensor"
+      mount:
+        px: 0.4
+        py: 0.0
+        rpy:
+          yaw: 0
+      sensor_filters:
+      - noise_filter:
+          property_specs: ["a_x", "a_y"]
+          seed: 0
+          gaussian:
+            mean: 0.0
+            std_dev: 0.3
+      - noise_filter:
+          property_specs: ["w_x", "w_y", "w_z"]
+          seed: 0
+          gaussian:
+            mean: 0.0
+            std_dev: 0.1
+      - noise_filter:
+          property_specs: ["a_z"]
+          seed: 0
+          constant: -9.81

@@ -1,0 +1,100 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+
+metadata:
+  name: intersection
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 15s}
+map:
+  key: ideal_intersection
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 100, x: 192.30670275733746}}
+      start: {utm: {y: 100, x: 101.94413768370606}}
+agents:
+- ego:
+    initial_velocity_mps: 10.0
+    initial_position:
+      point: {utm: {y: 100, x: 101.94413768370606}}
+      heading: 0
+- obstacle:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 100
+          x: 123
+      speed_mps: 7
+      heading: 0.0
+    type: VEHICLE
+    id: 1
+    behaviors:
+    - path_following:
+        simple_b_spline:
+          tangent_distance: 0.5
+          attractor_points:
+          - y: 101.0
+            x: 135.15050657457365
+          - y: 99.0
+            x: 140.15050657457365
+          - y: 105.0
+            x: 180.15050657457365
+          final_pose: {x: 200, y: 100, heading: 0.0}
+        constant_velocity:
+- obstacle:
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 104.48763925546193
+            x: 145.0736183701216
+            heading: 3.142
+          - y: 102.74032318210453
+            x: 134.81798124946965
+            heading: -3.058
+          - y: 103.8798384187952
+            x: 121.67557219851939
+            heading: -3.075
+          - y: 102.8923179255753
+            x: 105.26655280533168
+            heading: 3.0150005263098194
+            tangent_distance: 4.211941104192559
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 158.75084141977027
+          y: 103.5000000037041
+      speed_mps: 7
+      heading: 3.1415926534999947
+    type: VEHICLE
+    id: 2

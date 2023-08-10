@@ -1,0 +1,7 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+
+projection_settings:
+  utm:
+    north: true
+    zone: 10

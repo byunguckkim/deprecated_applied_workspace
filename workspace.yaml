@@ -1,0 +1,55 @@
+current_workspace: local      # Can be any name that appears in the list below.
+workspace:
+- name: local
+  maps: maps/
+  dlc: dlc/
+  scenarios: scenarios/
+  output: output/
+  input_drives: input/drives/
+  input_maps: input/maps/
+  input_models: input/models/
+  frontend: frontend/
+  db: database/
+  config: config.yaml
+- name: global
+# Prior to first use, copy sample maps and scenarios
+# with command `rsync -rv maps scenarios config.yaml  ~/simian/`
+  maps: ~/simian/maps/
+  scenarios: ~/simian/scenarios/
+  output: ~/simian/output/
+  input_drives: ~/simian/input/drives/
+  input_maps: ~/simian/input/maps/
+  input_models: ~/simian/input/models/
+  frontend: ~/simian/frontend/
+  db: ~/simian/database
+  config: ~/simian/config.yaml
+- name: one
+  maps: maps/
+  scenarios: scenarios/
+  output: output/
+  input_drives: input/drives/
+  input_maps: input/maps/
+  input_models: input/models/
+  frontend: frontend/
+  db: database_one/
+  config: config.yaml
+- name: two
+  maps: maps/
+  scenarios: scenarios/
+  output: output/
+  input_drives: input/drives/
+  input_maps: input/maps/
+  input_models: input/models/
+  frontend: frontend/
+  db: database_two/
+  config: config.yaml
+- name: three
+  maps: maps/
+  scenarios: scenarios/
+  output: output/
+  input_drives: input/drives/
+  input_maps: input/maps/
+  input_models: input/models/
+  frontend: frontend/
+  db: database_three/
+  config: config.yaml

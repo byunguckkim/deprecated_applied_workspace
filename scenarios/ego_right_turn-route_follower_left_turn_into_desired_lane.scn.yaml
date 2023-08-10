@@ -1,0 +1,65 @@
+metadata:
+  name: Ego right turn, lane following agent routed to do a left turn into egos desired
+    lane
+  scenario_version: v0.96
+  tags: ["sunnyvale", "lane_following"]
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest: {utm: {x: 586948.74, y: 4141171.12}}
+
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+
+observers:
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140951.168146831
+              x: 587117.1674869969
+        minimum_attractor_distance: 2
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587238.9143261018
+          y: 4140851.2966542495
+      speed_mps: 10
+      heading: 1.3128248254548431
+    type: VEHICLE
+    id: 1

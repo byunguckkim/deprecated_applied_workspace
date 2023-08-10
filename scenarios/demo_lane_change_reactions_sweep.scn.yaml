@@ -1,0 +1,136 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+extra_data:
+  ego_behavior_passthrough:
+metadata:
+  name: demo_LC
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+map:
+  key: straight_highway_3_long
+
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4499996
+          x: 500707.95834363584
+      start: {utm: {y: 4499996, x: 500346.6614816483}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4499996, x: 500346.6614816483}}
+      heading: 0
+    initial_velocity_mps: 12
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4499996.218041321
+            x: 500411.6705488688
+            heading: 0
+          - y: 4499996.868314993
+            x: 500446.35304905754
+            heading: 0.027
+          - y: 4499997.589774326
+            x: 500463.12105544924
+            heading: 0.071
+          - y: 4499998.522454187
+            x: 500480.46945309493
+            heading: 0.04624915420170821
+            tangent_distance: 3.075767560068417
+          - y: 4499999.513120625
+            x: 500509.21252283314
+            heading: 0.007968101881783967
+            tangent_distance: 4.149291657428155
+          - y: 4500000
+            x: 500590.7928776608
+            heading: 0
+- obstacle:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 500336.26509326324
+          y: 4500000
+      speed_mps: 12
+      heading: 0
+    type: VEHICLE
+    id: 2
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4500000
+              x: 500679.66248134465
+        motion_profile:
+          phases:
+          - hold_velocity:
+              duration: 100
+      until:
+        region:
+          relative_box:
+            x_range: [0, 35]
+            y_range: [-2.5, 0]
+          object:
+            ego: true
+    - route_following:
+        tangent_distance: 0.2
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4500000
+              x: 500679.66248134465
+        motion_profile:
+          phases:
+          - ramp_velocity:
+              target: $target_speed
+              rate: !math "$accel + $accel_modifier"
+          - hold_velocity:
+              duration: 3
+          - ramp_velocity:
+              target: 12
+              rate: !math "-1 * $accel + $accel_modifier"
+          - hold_velocity:
+              duration: 10
+# Three distinct cases: decel at -3, hold velocity, or accel at +1
+# Each with a small sweep range of +/- 0.3 m/s/s acceleration
+parameter_sweeps:
+- list:
+    var: accel
+    values: [-3, 0.001, 1]
+    group: "accel and target speed"
+- list:
+    var: target_speed
+    values: [9, 12.01, 15]
+    group: "accel and target speed"
+- range:
+    var: accel_modifier
+    first_value: -0.3
+    last_value: 0.3
+    num_steps: 11
+metrics:
+- acceleration:
+    obstacle_id: 2

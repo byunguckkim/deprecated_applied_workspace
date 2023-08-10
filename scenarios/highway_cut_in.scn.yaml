@@ -1,0 +1,66 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: highway_cut_in
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+map:
+  key: straight_highway_2
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4500000, x: 500263.41859545314}}
+      start: {utm: {y: 4500000, x: 500035.2619419033}}
+agents:
+- ego:
+    initial_velocity_mps: 10.0
+    initial_position:
+      point: {utm: {y: 4500000, x: 500035.2619419033}}
+      heading: 0
+- obstacle:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499996
+          x: 500004.142311443
+      speed_mps: 20
+      heading: 0
+    type: VEHICLE
+    id: 1
+    behaviors:
+    - until:
+        region:
+          object:
+            ego:
+          relative_box:
+            x_range: [-10, -15]
+            y_range: [-10, 10]
+      lane_keeping:
+    - lane_change:
+        parametric:
+          destination_lane: '0'
+          curve_distance: 50
+          tangent_distance: 10
+        motion_profile:
+          phases:
+          - hold_velocity: {duration: 0.5}
+          - ramp_velocity: {target: 9, rate: -5.0}
+          - ramp_velocity: {target: 10, rate: 1.0}
+          - hold_velocity: {duration: 10.5}
+    - lane_keeping:

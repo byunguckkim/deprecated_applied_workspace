@@ -1,0 +1,138 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: test_apollo_controls
+  scenario_version: v0.96
+
+sim_end:
+  until:
+  - timeout: {secs: 40s}
+
+map:
+  key: straight_highway_2
+
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 3.89  # from apollo mkz8 example
+    back_edge_to_center: 1.043  # from apollo mkz8 example
+    left_edge_to_center: 1.055  # from apollo mkz8 example
+    right_edge_to_center: 1.055 # from apollo mkz8 example
+    height: 1.48                # from apollo mkz8 example
+  kinematic_bicycle:
+    wheelbase: 2.8448           # from apollo mkz8 example
+    max_velocity: 20.0
+    max_acceleration: 2.0       # from apollo mkz8 example
+    max_deceleration: 6.0       # from apollo mkz8 example
+    max_steering_angle: 0.51269 # converted from apollo mkz8 example
+    max_steering_rate: 0.43633  # converted from apollo mkz8 example
+
+extra_data:
+  use_controller: True
+  wheelbase: 2.8448           # from apollo mkz8 example
+  max_acceleration: 2.0       # from apollo mkz8 example
+  max_deceleration: 6.0       # from apollo mkz8 example
+  max_steering_angle: 0.51269 # converted from apollo mkz8 example
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4500000
+          x: 500342.9271975521
+      start: {utm: {y: 4500000, x: 500034.9819703921}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4500000, x: 500034.9819703921}}
+      heading: 0
+- obstacle:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499996
+          x: 500004.0290627651
+      speed_mps: 15
+      heading: 0
+    type: VEHICLE
+    id: 1
+    behaviors:
+    - until:
+        region:
+          object:
+            ego:
+          relative_box:
+            x_range: [-10, -15]
+            y_range: [-10, 10]
+      lane_keeping:
+    - lane_change:
+        parametric:
+          destination_lane: "0"
+          curve_distance: 50
+          tangent_distance: 0.2
+        motion_profile:
+          phases:
+          - hold_velocity: {duration: 0.5}
+          - ramp_velocity: {target: 9, rate: -5.0}
+          - ramp_velocity: {target: 10, rate: 1.0}
+          - hold_velocity: {duration: 10.5}
+    - lane_keeping:
+- obstacle:
+    behaviors:
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4500000
+              x: 500103.7357971673
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 19.20349524473238
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4499992.2270533
+              x: 500103.53967869387
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          y: 4500004.266433472
+          x: 500103.7171132441
+      speed_mps: 1.5
+      heading: -1.550969935871995
+    type: PEDESTRIAN
+    id: 2

@@ -1,0 +1,75 @@
+metadata:
+  name: ego_straight_pedestrian_jaywalking-hide_behavior
+  scenario_version: v0.96
+  tags:
+  - sunnyvale
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+sim_end:
+  until:
+  - timeout: {secs: 15s}
+map:
+  key: sunnyvale
+
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140979.2455423092, x: 587275.2674987268}}
+      start: {utm: {y: 4140934.323992582, x: 587263.8705362407}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4140934.323992582, x: 587263.8705362407}}
+      heading: 1.3346278388085286
+- obstacle:
+    behaviors:
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4140960.7159028496
+              x: 587264.8314100952
+        - point:
+            utm:
+              y: 4140959.313007455
+              x: 587270.2088711516
+    - hide:
+      until:
+        timeout: {secs: 3s}
+    - simple_wait: true
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          y: 4140962.3235656973
+          x: 587259.4434201255
+      speed_mps: 1.5
+      heading: -0.2449786631486296
+    type: PEDESTRIAN
+    id: 1

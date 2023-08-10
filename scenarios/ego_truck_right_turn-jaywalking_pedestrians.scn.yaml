@@ -1,0 +1,146 @@
+metadata:
+  name: Truck making right pedestrian in lane
+  scenario_version: v0.96
+  tags: [truck, sunnyvale, distance_trigger, demo]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+
+observers:
+- name: Max Wait
+  always: {fail_if_ego_wait_exceeds: 5s}
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+
+vehicle:
+  mesh_name: applied:cab
+  shape:
+    front_edge_to_center: 7.5
+    back_edge_to_center: 1.1
+    left_edge_to_center: 1.3
+    right_edge_to_center: 1.3
+    height: 3.5
+  trailers:
+  - mesh_name: applied:trailer
+    shape:
+      axis_aligned_box:
+        x_lower: -1.8
+        x_upper: 11.7
+        y_lower: -1.3
+        y_upper: 1.3
+        z_lower: 0.0
+        z_upper: 3.4
+    trailer_hitch_x: 10.8
+    hitch_angle: 0.0
+
+  external: {}
+trip_agent:
+  behavior:
+  - generate_route:
+      start:
+        utm:
+          y: 4140949.8398982543
+          x: 587259.1151854873
+      dest:
+        utm:
+          y: 4140939.963973756
+          x: 587161.1131830781
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4140949.8398982543
+          x: 587259.1151854873
+      heading: -1.8294798073953702
+    initial_velocity_mps: 0
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140921.780531203
+            x: 587203.4463219603
+            heading: -1.937
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587207.796506836
+          y: 4140933.112494274
+      speed_mps: 1.5
+      heading: -2.090518596860361
+    type: PEDESTRIAN
+    id: 1
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140921.656861337
+            x: 587198.9207772361
+            heading: -2.066
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587205.5408554189
+          y: 4140933.918084066
+      speed_mps: 1.5
+      heading: -2.053240666244447
+    type: PEDESTRIAN
+    id: 2

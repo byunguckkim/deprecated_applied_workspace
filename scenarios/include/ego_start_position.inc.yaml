@@ -1,0 +1,6 @@
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0

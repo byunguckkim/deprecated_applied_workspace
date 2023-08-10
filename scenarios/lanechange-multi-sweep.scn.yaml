@@ -1,0 +1,100 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: lanechange-multi-sweep
+  scenario_version: v0.96
+  tags:
+  - param_sweep
+sim_end:
+  until:
+  - timeout: {secs: 25s}
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140995.465721926, x: 586929.8113843391}}
+      start:
+        utm:
+          y: 4140913.7007209403
+          x: 587248.7658083804
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587211.9330619014, y: 4140923.170307329}}
+      heading: 2.888536638792363
+    initial_velocity_mps: 0
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point: $utm_sweep
+      speed_mps: $speed_mps_sweep
+      heading: 2.8868340328705546
+    behaviors:
+    - lane_keeping:
+        actions:
+        - duration: $duration_sweep
+    - lane_change:
+        geometric:
+          endpoint:
+            longitudinal_offset: 80
+            lateral_offset: 4
+          center:
+            longitudinal_offset: 40
+            lateral_offset: 2
+    - lane_keeping:
+        actions:
+        - duration: 60s
+          modify_speed:
+            acceleration: $acceleration_sweep
+parameter_sweeps:
+- list:
+    var: duration_sweep
+    values: [3s, 4s, 5s]
+- range:
+    var: acceleration_sweep
+    first_value: -4
+    last_value: -2
+    num_steps: 3
+- list:
+    var: utm_sweep
+    values:
+    - utm:
+        y: 4140917.7477066657
+        x: 587247.3932147969
+    - utm:
+        y: 4140915.779449073
+        x: 587254.9748934401
+    - utm:
+        y: 4140913.81075968
+        x: 587262.5566121708
+    group: 'Vehicle position / speed'
+- range:
+    var: speed_mps_sweep
+    first_value: 15
+    last_value: 18
+    num_steps: 3
+    group: 'Vehicle position / speed'
+
+observers:
+- name: Max Deceleration
+  always:
+    motion:
+      fail_if_decel_above_mps2: 3.5
+- name: Min Vehicle Distance
+  always:
+    distance:
+      obstacle_a: {type: VEHICLE}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 0.5

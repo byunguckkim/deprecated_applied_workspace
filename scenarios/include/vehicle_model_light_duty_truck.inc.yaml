@@ -1,0 +1,46 @@
+# The parameters here are for Ford F -150, the best selling vehicle in the light duty truck segment.
+# Shape and wheelbase parameters
+# Source: https://media.ford.com/content/dam/fordmedia/North%20America/US/product/2019/f-150/2019-F-150.pdf
+# max_steering_angle approximated from turning radius
+# Source: https://www.caranddriver.com/ford/f-150-2020/specs
+# max_acceleration approximated using 0-60 mph times
+# Source: https://www.motor1.com/news/292802/ford-f-150-limited-0-60/
+# max_deceleration approximated using 60-0 mph stopping distance
+# Source: https://www.motortrend.com/cars/ford/f-150/2018/2018-ford-f-150-first-test-review/
+# No info was found on max_steering_wheel_angle_rate(expected). So a reasonable value was chosen
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 2.65811  # [m]
+    back_edge_to_center: 2.65811   # [m]
+    left_edge_to_center: 1.016     # [m]
+    right_edge_to_center: 1.016    # [m]
+    height: 1.92278                # [m]
+  composite_vehicle:
+    brake:
+      brake_linear:
+        max_brake_decel: 9.91  # [m]/s^2
+    powertrain:
+      powertrain_linear:
+        max_acceleration: 5.25  # [m/s^2]
+    steering:
+      bicycle_linear:
+        wheelbase: 3.10896                  # [m]
+        steering_ratio: 15.0                # [-]
+        max_steering_wheel_angle: 5.69745   # [rad]
+        max_steering_wheel_angle_rate: 4.5  # [rad/s]
+        num_integration_steps: 10           # [-]
+    tires:
+      simple_properties:
+        sliding_friction: 0.0
+        rolling_friction: 0.0
+
+extra_data:
+  use_controller: true
+  use_composite_vehicle: true
+  wheelbase: 3.1               # [m]
+  max_acceleration: 5.25       # [m/s^2]
+  max_deceleration: 9.91       # [m/s^2]
+  max_steering_angle: 0.37983  # [rad]
+  # NOTE: steering_angle is synonymous to tire angle and is related to the steering_wheel angle in the following
+  # manner: steering_wheel_angle = steering_ratio * steering_angle

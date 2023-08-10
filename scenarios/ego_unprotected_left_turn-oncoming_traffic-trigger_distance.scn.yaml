@@ -1,0 +1,103 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Ego taking an unprotected left, with distance triggered oncoming vehicle
+  scenario_version: v0.96
+  tags: [sunnyvale, distance_trigger]
+
+map: {key: sunnyvale}
+sim_end:
+ until:
+ - timeout: {secs: 20s}
+
+observers:
+- name: Min Vehicle Distance
+  always:
+    distance:
+      fail_if_below_m: 5.5
+      obstacle_a: {type: VEHICLE}
+      obstacle_b: {ego: true}
+- name: Min Pedestrian Distance
+  always:
+    distance:
+      fail_if_below_m: 2.5
+      obstacle_a: {type: PEDESTRIAN}
+      obstacle_b: {ego: true}
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start:
+        utm:
+          y: 4140785.8571353005
+          x: 587218.7964714315
+      dest: {utm: {x: 587305.4210415864, y: 4140673.3826969173}}
+
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4140785.8571353005
+          x: 587218.7964714315
+      heading: -1.793470485920468
+    initial_velocity_mps: 0
+- obstacle:
+    id: 2
+    type: VEHICLE
+    model:
+      static:
+        height: 1.3
+        point:
+        - {x: 2.5, y: 0.8}
+        - {x: 2.5, y: -0.8}
+        - {x: -1.2, y: -0.8}
+        - {x: -1.2, y: 0.8}
+    initial_state:
+      point: {utm: {x: 587243.0681947266, y: 4140737.6629758286}}
+      heading: 2.8933200745182095
+      speed_mps: 10
+    behaviors:
+    - until:
+        distance:
+          obstacle_b: {ego: true}
+          trigger_below_m: 39
+      simple_wait: true
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140797.2836964056
+              x: 587008.706266823
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140771.4149792967
+          x: 587215.1127297268
+      speed_mps: 10
+      heading: -1.8192629603873867
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140798.1447035717
+              x: 587005.290913852
+        minimum_attractor_distance: 2

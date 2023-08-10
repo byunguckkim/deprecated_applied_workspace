@@ -1,0 +1,135 @@
+metadata:
+  name: Ego Right Turn, busy intersection
+  scenario_version: v0.96
+  tags: [sunnyvale]
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start:
+        utm:
+          y: 4141108.20868639
+          x: 586555.4568717682
+      dest:
+        utm:
+          y: 4141143.938307518
+          x: 586544.0074970627
+
+sim_end:
+  until:
+  - timeout: {secs: 25s}
+
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4141108.20868639
+          x: 586555.4568717682
+      heading: 2.5991610835866044
+    initial_velocity_mps: 0
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 7
+    initial_state:
+      point:
+        utm:
+          y: 4141109.5037480392
+          x: 586534.8198006994
+      speed_mps: 7
+      heading: 1.3101939350352283
+    behaviors:
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4141149.18438704
+              x: 586545.1674999451
+
+- obstacle:
+    model:
+      static:
+        height: 1.65
+        point:
+        - {x: 0, y: 0.35}
+        - {x: 0.2, y: 0.25}
+        - {x: 0.2, y: -0.25}
+        - {x: 0, y: -0.35}
+        - {x: -0.2, y: -0.25}
+        - {x: -0.2, y: 0.25}
+    type: PEDESTRIAN
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4141128.558114659
+          x: 586547.8560864859
+      speed_mps: 1.5
+      heading: 2.8370817704124907
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 10
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 2
+          poses:
+          - y: 4141130.4281322313
+            x: 586542.1784515321
+            heading: 2.957
+          - y: 4141130.827130943
+            x: 586535.7343537359
+            heading: 2.865
+          - y: 4141134.01624481
+            x: 586529.5179567423
+            heading: 2.668
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4141169.0193560636
+              x: 586550.0973219284
+        minimum_attractor_distance: 2
+    model:
+      static:
+        point:
+        - y: 0.45
+          x: 1.6
+        - y: -0.45
+          x: 1.6
+        - y: -0.45
+          x: -1.6
+        - y: 0.45
+          x: -1.6
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 586501.1730933697
+          y: 4141125.900567838
+      speed_mps: 8
+      heading: -0.7598892802462718
+    type: MOTORCYCLE
+    id: 2

@@ -1,0 +1,238 @@
+metadata:
+  name: Unprotected left turn onto a busy road
+  scenario_version: v0.96
+  tags: ["sunnyvale", "unprotected_left", "traffic", "demo"]
+sim_end:
+  until:
+  - timeout: {secs: 60s}
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4140639.805461633
+          x: 586120.7718043837
+      start:
+        utm:
+          y: 4140463.163902632
+          x: 586071.4528759932
+          z: 0
+agents:
+- ego:
+    initial_velocity_mps: 0
+    initial_position:
+      heading: 0.6943364584680578
+      point:
+        utm:
+          y: 4140463.163902632
+          x: 586071.4528759932
+          z: 0
+- traffic:
+    name: pedestrian
+    initial_time_gap: 2s
+    initial_min_distance_gap_m: 1
+    max_actors: 20
+    randomize:
+      initial_gap: {std_dev: 10.0}
+      seed: 2
+    actors:
+    - type: PEDESTRIAN
+      id: 3
+      model:
+        static:
+          height: 1.65
+          point:
+          - {x: 0, y: 0.35}
+          - {x: 0.2, y: 0.25}
+          - {x: 0.2, y: -0.25}
+          - {x: 0, y: -0.35}
+          - {x: -0.2, y: -0.25}
+          - {x: -0.2, y: 0.25}
+      initial_state:
+        point: {utm: {x: 586134.781, y: 4140491.286}}
+        heading: -1.3563895707136973
+        speed_mps: 1.5
+      behaviors:
+      - path_following:
+          constant_velocity:
+          pose_b_spline:
+            default_tangent_distance: 3
+            poses:
+            - y: 4140457.3908900386
+              x: 586144.5267228207
+              heading: -1.291
+- traffic:
+    name: traffic_opposing
+    initial_time_gap: 1s
+    initial_min_distance_gap_m: 5
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 3.0}
+    max_actors: 100
+    priming_duration: 15s
+    actors:
+    - type: VEHICLE
+      id: 4
+      model: &vehicle_model
+        static:
+          height: 1.5
+          point:
+          - {x: 2.1, y: 0.9}
+          - {x: 2.1, y: -0.9}
+          - {x: -1.3, y: -0.9}
+          - {x: -1.3, y: 0.9}
+      initial_state:
+        point: {utm: {x: 586112.103, y: 4140555.861}}
+        heading: -1.2321381766353756
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140482.8946099733
+                x: 586087.7747032624
+          minimum_attractor_distance: 2
+    - type: VEHICLE
+      id: 5
+      model: *vehicle_model
+      initial_state:
+        point: {utm: {x: 586119.503, y: 4140548.460}}
+        heading: -1.2062791038895821
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140411.239307841
+                x: 586167.1439350108
+          minimum_attractor_distance: 2
+    - type: VEHICLE
+      id: 6
+      model: *vehicle_model
+      initial_state:
+        point: {utm: {x: 586121.4438077502, y: 4140552.1374889193}}
+        heading: -1.2094985546458723
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140407.7265286935
+                x: 586171.5511601499
+          minimum_attractor_distance: 2
+    - type: VEHICLE
+      id: 7
+      model: *vehicle_model
+      initial_state:
+        point: {utm: {x: 586184.289, y: 4140414.865}}
+        heading: 1.8598015062047963
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140637.0470470767
+                x: 586113.5690429984
+          minimum_attractor_distance: 2
+    - type: VEHICLE
+      id: 8
+      model: *vehicle_model
+      initial_state:
+        point: {utm: {x: 586193.38387294, y: 4140393.5840446404}}
+        heading: 1.8115049696713754
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140639.9993378036
+                x: 586116.5553736279
+          minimum_attractor_distance: 2
+    - type: VEHICLE
+      id: 9
+      model: *vehicle_model
+      initial_state:
+        point: {utm: {x: 586195.6822833135, y: 4140397.3047909103}}
+        heading: 1.8303037727895521
+        speed_mps: 10
+      behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4140644.922676928
+                x: 586119.6820999632
+          minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 1.5, y: 0.35}
+        - {x: 1.5, y: -0.35}
+        - {x: -1.5, y: -0.35}
+        - {x: -1.5, y: 0.35}
+    type: BICYCLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140554.82663832
+          x: 586116.0827163192
+      heading: -1.2800463875042847
+      speed_mps: 5
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140423.369215202
+            x: 586160.8719081178
+            heading: -1.248
+- obstacle:
+    model:
+      static:
+        height: 8
+        point:
+        - y: 0.0
+          x: 0.0
+        - y: 5.191412077285349
+          x: 28.995935293263756
+        - y: 11.902261836454272
+          x: 5.3180318005615845
+    id: 2
+    type: UNKNOWN_UNMOVABLE
+    initial_state:
+      point:
+        utm:
+          y: 4140487.79866922
+          x: 586077.6631808924
+      speed_mps: 0
+    behaviors:
+    - simple_wait: true

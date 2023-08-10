@@ -1,0 +1,54 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Truck empty curved highway
+  scenario_version: v0.96
+  tags: [sunnyvale, highway, truck]
+sim_end:
+  until:
+  - timeout: {secs: 60s}
+map:
+  key: sunnyvale
+
+vehicle:
+  mesh_name: applied:cab
+  shape:  # The tractor of our truck mesh.
+    front_edge_to_center: 7.5
+    back_edge_to_center: 1.1
+    left_edge_to_center: 1.3
+    right_edge_to_center: 1.3
+    height: 3.5
+  trailers:
+  - mesh_name: applied:trailer
+    shape:
+      axis_aligned_box:
+        x_lower: -1.8
+        x_upper: 11.7
+        y_lower: -1.3
+        y_upper: 1.3
+        z_lower: 0.0
+        z_upper: 3.4
+    trailer_hitch_x: 10.8
+    hitch_angle: -0.02
+
+  external: {}
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4141162.7066626623
+          x: 586214.1900038387
+      start:
+        utm:
+          y: 4141736.4692541994
+          x: 586504.3604189703
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4141736.4692541994
+          x: 586504.3604189703
+      heading: 2.89557859104384
+    initial_velocity_mps: 0

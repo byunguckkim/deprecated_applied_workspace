@@ -1,0 +1,78 @@
+metadata:
+  name: Ego right turn, multiple objects in road
+  scenario_version: v0.96
+  tags: [sunnyvale]
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest: {utm: {x: 586948.74, y: 4141171.12}}
+
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+
+observers:
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0
+- obstacle:
+    type: PEDESTRIAN
+    id: 0
+    model:
+      static:
+        height: 1.8
+        point:
+        - {x: 0.5, y: 0.5}
+        - {x: 0.5, y: -0.5}
+        - {x: -0.5, y: -0.5}
+        - {x: -0.5, y: 0.5}
+    initial_state:
+      point: {utm: {x: 587213.1937198832, y: 4140927.91}}
+      heading: -1.31
+    behaviors: []
+- obstacle:
+    type: VEHICLE
+    id: 1
+    model:
+      static:
+        height: 1.4
+        point:
+        - {x: 2.7, y: 0.8}
+        - {x: 2.7, y: -0.8}
+        - {x: -1.1, y: -0.8}
+        - {x: -1.1, y: 0.8}
+    initial_state:
+      point: {utm: {x: 587187.20, y: 4140927.62}}
+      heading: 2.8866500354434614
+    behaviors: []
+- obstacle:
+    type: BICYCLE
+    id: 2
+    model:
+      static:
+        height: 1.9
+        point:
+        - {x: 1.4, y: 0.4}
+        - {x: 1.4, y: -0.4}
+        - {x: -0.5, y: -0.4}
+        - {x: -0.5, y: 0.4}
+    initial_state:
+      point: {utm: {x: 587161.93, y: 4140941.26}}
+      heading: 2.869581701797041
+    behaviors: []

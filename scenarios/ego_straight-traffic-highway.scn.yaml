@@ -1,0 +1,119 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+metadata:
+  name: Highway with traffic
+  scenario_version: v0.96
+  tags: ["sunnyvale", "highway", "traffic"]
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+map:
+  key: sunnyvale
+projection_settings:
+  utm:
+    north: false
+    zone: 10
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4141673.739919339
+          x: 586736.2887876523
+      start:
+        utm:
+          y: 4141597.635904875
+          x: 587013.514471201
+agents:
+- ego:
+    initial_velocity_mps: 15
+    initial_position:
+      heading: 2.8741818541127224
+      point:
+        utm:
+          y: 4141597.635904875
+          x: 587013.514471201
+- traffic:
+    name: traffic_right
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    priming_duration: 15s
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 5.0}
+    max_actors: 100
+    actors:
+    - behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4141735.6535801967
+                x: 586507.5942401227
+          minimum_attractor_distance: 2
+      model:
+        static:
+          point:
+          - y: 1.3
+            x: 10.5
+          - y: -1.3
+            x: 10.5
+          - y: -1.3
+            x: -10.5
+          - y: 1.3
+            x: -10.5
+          height: 4.1
+      initial_state:
+        point:
+          utm:
+            x: 587028.0610995309
+            y: 4141597.501516354
+        speed_mps: 15
+        heading: 2.8843492581783083
+      type: TRUCK
+      id: 1
+- traffic:
+    name: traffic_left
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    priming_duration: 15s
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 5.0}
+    max_actors: 100
+    actors:
+    - behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          constant_velocity:
+          waypoints:
+          - point:
+              utm:
+                y: 4141729.4789872225
+                x: 586505.7209152489
+          minimum_attractor_distance: 2
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            x: 587018.3069494785
+            y: 4141593.403121736
+        speed_mps: 15
+        heading: 2.898507177987467
+      type: VEHICLE
+      id: 2

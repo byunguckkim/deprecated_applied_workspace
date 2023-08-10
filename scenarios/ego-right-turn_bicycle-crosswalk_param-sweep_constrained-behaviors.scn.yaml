@@ -1,0 +1,73 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: ego-right-turn_bicycle-crosswalk_param-sweep_constrained-behaviors
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 15s}
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140931.955051035, x: 587192.4235012243}}
+      start:
+        utm:
+          y: 4140945.110648173
+          x: 587257.880484008
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4140945.110648173
+          x: 587257.880484008
+      heading: -1.8302398591959406
+    initial_velocity_mps: 0
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 1.5, y: 0.35}
+        - {x: 1.5, y: -0.35}
+        - {x: -1.5, y: -0.35}
+        - {x: -1.5, y: 0.35}
+    type: BICYCLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140930.298301445
+          x: 587242.2752175265
+      speed_mps: $speed_mps_sweep
+      heading: -0.2525284906260568
+    behaviors:
+    - constrained_behaviors:
+        prebehavior:
+          simple_wait: true
+        constraint:
+          duration: 5s
+        behaviors:
+        - waypoint_following:
+            relative_waypoints:
+            - point:
+                utm:
+                  y: 4140926.2912421026
+                  x: 587255.0097435958
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4140923.9775847243
+              x: 587266.7109622563
+
+parameter_sweeps:
+- range:
+    var: speed_mps_sweep
+    first_value: 1
+    last_value: 15
+    num_steps: 20

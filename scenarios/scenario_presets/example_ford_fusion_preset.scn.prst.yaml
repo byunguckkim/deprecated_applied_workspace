@@ -1,0 +1,11 @@
+include:
+  - file: scenario://workspace/include/global_observers.inc.yaml
+
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478

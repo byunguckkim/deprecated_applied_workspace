@@ -1,0 +1,75 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Pedestrian crossing Crosswalk
+  scenario_version: v0.96
+  tags: [sunnyvale]
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140922.0414468683, x: 587216.7801030714}}
+      start: {utm: {y: 4140896.4536308725, x: 587304.8486135892}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4140896.4536308725, x: 587304.8486135892}}
+      heading: 2.746108598964476
+- obstacle:
+    model:
+      static:
+        height: 1.65
+        point:
+        - {x: 0, y: 0.35}
+        - {x: 0.2, y: 0.25}
+        - {x: 0.2, y: -0.25}
+        - {x: 0, y: -0.35}
+        - {x: -0.2, y: -0.25}
+        - {x: -0.2, y: 0.25}
+    type: PEDESTRIAN
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140915.7966969465
+          x: 587276.2799357538
+      speed_mps: 1.5
+      heading: -1.8533512792604698
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140883.096686752
+            x: 587267.3485690153
+            heading: -1.7698392288935638
+            tangent_distance: 1.9575753276054693
+observers:
+- name: Min Pedestrian Distance
+  always:
+    distance:
+      obstacle_a: {type: PEDESTRIAN}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 0
+- name: Max Velocity
+  always:
+    motion:
+        # Add maximum velocity here
+      fail_if_vel_above_mps: 10
+- name: Max Jerk
+  always:
+    motion:
+        # Add maximum jerk here
+      fail_if_jerk_above_mps3: 20
+- name: Max Deceleration
+  always:
+    motion:
+        # Add maximum deceleration here
+      fail_if_decel_above_mps2: 3

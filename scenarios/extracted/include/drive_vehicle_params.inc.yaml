@@ -1,0 +1,9 @@
+vehicle:
+  shape:
+    front_edge_to_center: 3.85
+    back_edge_to_center: 1.11
+    left_edge_to_center: 1.07
+    right_edge_to_center: 1.07
+    height: 1.478
+  mesh_name: applied:car
+  external: {}

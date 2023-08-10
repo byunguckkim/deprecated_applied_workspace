@@ -1,0 +1,83 @@
+include:
+- file: scenario://workspace/include/sunnyvale_traffic_lights_augmented.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+metadata:
+  name: Ego at Traffic Light Intersection
+  scenario_version: v0.96
+  tags:
+  - sunnyvale
+  - traffic_light
+sim_end:
+  until:
+  - timeout: {secs: 45s}
+map:
+  key: sunnyvale
+
+vehicle:
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478
+  sensors:
+    traffic_light_sensors:
+    - name: Traffic Light Sensor
+      sensor_view:
+        mount:
+          px: 0.25
+          py: 0.0
+          pz: 0.0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        sector_fov:
+          distance_near: 0.0
+          distance_far: 100.0
+          yaw_start: !math "-pi / 4"  # 45 degrees to the right
+          yaw_length: !math "pi / 2"  # 90 degrees counter-clockwise (top-down view)
+      sensor_output:
+        reporting_frame: MAP
+
+  external: {}
+traffic_light_controllers:
+- timed_stage_behavior:
+    stage_name: STAGE-1
+    timed_stages:
+    - name: NORTH-SOUTH-BOUND
+      time: 5.0
+    - name: NORTH-SOUTH-BOUND-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: EAST-WEST-BOUND-TURN
+      time: 5.0
+    - name: EAST-WEST-BOUND-TURN-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: EAST-WEST-BOUND
+      time: 5.0
+    - name: EAST-WEST-BOUND-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: NORTH-SOUTH-BOUND-TURN
+      time: 5.0
+    - name: NORTH-SOUTH-BOUND-TURN-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140928.783048981, x: 587190.6490267625}}
+      start: {utm: {y: 4140899.9701116034, x: 587295.6346383499}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4140899.9701116034, x: 587295.6346383499}}
+      heading: 2.811302499973823

@@ -1,0 +1,287 @@
+include:
+- file: scenario://workspace/include/sunnyvale_traffic_lights_augmented.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Ego at Traffic Light Intersection
+  scenario_version: v0.96
+  tags:
+  - traffic_light
+  - sunnyvale
+  - smart_agent
+  - demo
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+map:
+  key: sunnyvale
+
+vehicle:
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478
+  sensors:
+    traffic_light_sensors:
+    - name: Traffic Light Sensor
+      sensor_view:
+        mount:
+          px: 0.25
+          py: 0.0
+          pz: 0.0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        sector_fov:
+          distance_near: 0.0
+          distance_far: 100.0
+          yaw_start: !math "-pi / 4"  # 45 degrees to the right
+          yaw_length: !math "pi / 2"  # 90 degrees counter-clockwise (top-down view)
+      sensor_output:
+        reporting_frame: MAP
+  external: {}
+traffic_light_controllers:
+- timed_stage_behavior:
+    stage_name: STAGE-1
+    timed_stages:
+    - name: NORTH-SOUTH-BOUND
+      time: 5.0
+    - name: NORTH-SOUTH-BOUND-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: EAST-WEST-BOUND-TURN
+      time: 5.0
+    - name: EAST-WEST-BOUND-TURN-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: EAST-WEST-BOUND
+      time: 5.0
+    - name: EAST-WEST-BOUND-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+    - name: NORTH-SOUTH-BOUND-TURN
+      time: 5.0
+    - name: NORTH-SOUTH-BOUND-TURN-SLOW
+      time: 3.0
+    - name: STOP
+      time: 2.0
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140928.783048981, x: 587190.6490267625}}
+      start: {utm: {y: 4140899.9701116034, x: 587295.6346383499}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4140899.9701116034, x: 587295.6346383499}}
+      heading: 2.811302499973823
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140881.145414352
+          x: 587330.9719703667
+      speed_mps: 7
+      heading: 2.6973156767858892
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140866.1333040795
+              x: 587329.4137199685
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.65
+        point:
+        - {x: 1.6, y: 0.45}
+        - {x: 1.6, y: -0.45}
+        - {x: -1.6, y: -0.45}
+        - {x: -1.6, y: 0.45}
+    type: MOTORCYCLE
+    id: 2
+    initial_state:
+      point:
+        utm:
+          y: 4140890.7256672224
+          x: 587310.4485797198
+      speed_mps: 8
+      heading: 2.7373731357737565
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140837.762038207
+              x: 587231.0832845765
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 3
+    initial_state:
+      point:
+        utm:
+          y: 4140857.1087030903
+          x: 587244.5587982074
+      speed_mps: 7
+      heading: 1.3414028173703096
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140937.3223594003
+              x: 587264.6256187778
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 4
+    initial_state:
+      point:
+        utm:
+          y: 4140836.1340032816
+          x: 587239.1766716983
+      speed_mps: 7
+      heading: 1.3128243336404424
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140880.197081407
+              x: 587287.6385500311
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 5
+    initial_state:
+      point:
+        utm:
+          y: 4140909.2562983283
+          x: 587207.2285692401
+      speed_mps: 7
+      heading: -0.250025665769674
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140926.2499943757
+              x: 587200.2231195554
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 4.1
+        point:
+        - {x: 5.5, y: 1.3}
+        - {x: -5.5, y: 1.3}
+        - {x: -5.5, y: -1.3}
+        - {x: 5.5, y: -1.3}
+    type: TRUCK
+    id: 6
+    initial_state:
+      point:
+        utm:
+          y: 4140949.2390608406
+          x: 587258.9561714046
+      speed_mps: 6.5
+      heading: -1.830239583985718
+    behaviors:
+    - route_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 2s
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140833.9911957383
+              x: 587230.1988853987
+        minimum_attractor_distance: 2

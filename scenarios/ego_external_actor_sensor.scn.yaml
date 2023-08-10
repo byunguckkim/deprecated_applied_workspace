@@ -1,0 +1,105 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Ego with External Actor Sensor
+  scenario_version: v0.96
+  tags: [sunnyvale]
+sim_end:
+  until:
+  - timeout: {secs: 10s}
+map:
+  key: sunnyvale
+
+
+vehicle:
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478
+  sensors:
+    actor_sensors:
+    - name: Front Relative Actor Sensor
+      sensor_view:
+        mount:
+          px: 0.25
+          py: 0.0
+          pz: 0.0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        sector_fov:
+          distance_near: 0.0
+          distance_far: 45.0
+          yaw_start: !math "-pi / 4"  # 45 degrees to the right
+          yaw_length: !math "pi / 2"  # 90 degrees counter-clockwise (top-down view)
+      sensor_output:
+        reporting_frame: MAP
+    - name: External Fixed Actor Sensor
+      sensor_view:
+        mount:
+          px: 587275.5968163597
+          py: 4140920.0789169064
+          pz: 0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        sector_fov:
+          distance_near: 0.0
+          distance_far: 45.0
+          yaw_start: !math "0"
+          yaw_length: !math "pi * 2.0"
+        fix_to_global_frame: true
+      sensor_output:
+        reporting_frame: MAP
+  external: {}
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4140928.783048981, x: 587190.6490267625}}
+      start: {utm: {y: 4140897.484712366, x: 587302.151907461}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {y: 4140897.484712366, x: 587302.151907461}}
+      heading: 2.811302499973823
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140906.0067355284
+          x: 587278.0587250185
+      speed_mps: 7
+      heading: 2.7909200221362527
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140911.2242613453
+            x: 587269.9300244531
+            heading: 2.2313734656387685
+            tangent_distance: 1.9850709644774904
+          - y: 4140918.256227231
+            x: 587265.7995763357
+            heading: 1.957
+          - y: 4140930.4989396627
+            x: 587263.232836048
+            heading: 1.592
+          - y: 4140944.5563568496
+            x: 587266.4673757724
+            heading: 1.345

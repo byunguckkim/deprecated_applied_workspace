@@ -1,0 +1,171 @@
+# Scenario description needs at least two metadata fields: 'name'
+# gets displayed as the scenario name in Simian manager, and
+# scenario_version needs to match the one supported by the scenario
+# compiler.
+#
+# Other available metadata fields:
+# - key is typically auto-generated and can be omitted here
+# - related_scenarios is a list of keys
+# - comments is a list of dicts that contain author, date, and message.
+#
+metadata:
+  name: "Ego right turn, Pedestrian jaywalking"
+  scenario_version: v0.96
+  tags: ["sunnyvale", "distance_trigger"]
+
+map:
+  key: "sunnyvale"
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest:
+        utm:
+          y: 4140946.897017385
+          x: 587133.877011481
+
+# Include directives are a list of other scenario descriptions to
+# include. The included scenarios can in turn include
+# others. Typically, you will use an included scenario file to set up
+# shared settings, such as which map to load and what projection
+# settings to use for coordinate transforms. You might also want to
+# place some global observers (see below) in an included file, or
+# include a base functional test that already contains some agents
+# (see below).
+#
+# Inclusion processing happens by first loading all the
+# included files in the order given here, and then the contents of
+# this file. This is NOT influenced by where the include statement
+# appears in the file.
+#
+# Currently, includes can only specify files. They are searched
+# relative to the directory containing the topmost description file.
+#
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+- file: scenario://workspace/include/ego_start_position.inc.yaml
+
+# Specify under what conditions the simulation shall end. Typically, a
+# timout is used, like here.
+#
+# Another common use case is to specify a region, when the ego vehicle
+# enters that region the sim ends. For example:
+#    - region:
+#         object: { ego: true }
+#         point_radius:
+#           point: {utm: {x: 610535.83, y: 4127569.03, z: 137.00}}
+#           radius: 2.0
+
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+
+# Observers specify conditions under which the simulation run should
+# be considered pass or fail. At least one observer must be specified,
+# and all of them need to pass in order to declare the sim run a
+# success.
+#
+# The most common observers are the global ones, specified with an
+# "always" key. They look at various max/min values over the entire
+# run.
+#
+# You can also specify observers as a sequence of conditions. Each
+# time a condition becomes true, the sequence advances to the next
+# condition. The entire sequence needs to be done by simulation end,
+# otherwise that sequence observer signals a failure.
+
+observers:
+- name: "Max Wait"
+  always: {fail_if_ego_wait_exceeds: 5s}
+- name: "Max Velocity"
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+- name: "Let pedestrian cross before proceeding"
+  sequence:
+  - region:
+      object:
+        obstacle_id: 1
+      point_radius:
+        point: {utm: {x: 587214.0174770249, y: 4140919.1406624326}}
+        radius: 3
+  - region:
+      object:
+        ego:
+      point_radius:
+        point: {utm: {x: 587176.8224604077, y: 4140936.1889446923}}
+        radius: 10
+
+# Agents (sometimes also called actors) are the simulated
+# entities. Usually there is a single "ego" entry, which can come from
+# an included file (as in this example) and a list of obstacles.
+#
+# Obstacles have a type, an id, a model, and behaviors.
+# type:      Currently supported are PEDESTRIAN, VEHICLE, BICYCLE,
+#            MOTORCYCLE, TRUCK, GOLF_CART, ANIMAL, VEHICLE_ON_SHOULDER,
+#            UNKNOWN_MOVABLE, and UNKNOWN_UNMOVABLE.
+# id:        The id can usually be auto-assigned by the compiler, but if you
+#            need to refer to an obstacle in a distance trigger then you
+#            need to explicitly assign it an id and use that same number in
+#            the trigger definition (see below).
+# model:     Synthetic scenarios typically use a static type with height
+#            and a list of (x,y) points.
+# behaviors: The most involved part when creating synthetic scenarios,
+#            this gives a sequence of behaviors to run
+#            through. Typically we use path_following, which takes
+#            a list of poses along with a motion type.
+#            The motion type is used to specify a speed profile along the
+#            actor's path. Use constant_velocity for a constant speed profile.
+#
+# Frequently, you will want to trigger a behavior. You achieve this by
+# starting the behaviors sequence with an "until" statement that
+# specifies a condition; the behavior will execute the sub-behavior
+# defined along with the until, and when the condition becomes true,
+# then the next behavior of the obstacle is executed. The example here
+# contains a distance trigger: when the ego comes closer than 30m to
+# the obstacle with id 1, then the simple_wait behavior is terminated
+# and the actual path following is started.
+
+agents:
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140919.296005726
+            x: 587214.2781550074
+            heading: -1.888
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587218.2570450659
+          y: 4140934.713257918
+      speed_mps: 1.5
+      heading: -1.6667314429841522
+    type: PEDESTRIAN
+    id: 1

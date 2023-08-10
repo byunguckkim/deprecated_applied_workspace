@@ -1,0 +1,763 @@
+metadata:
+  name: Sensor sim - ego right turn with apollo sensors
+  scenario_version: v0.96
+  tags:
+  - sensor_sim
+sim_end:
+  until:
+  - timeout: {secs: 40s}
+map:
+  key: sunnyvale
+spectral:
+  environment:
+    weather: CLEARNOON
+projection_settings:
+  utm:
+    north: true
+    zone: 10
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 3.8
+    back_edge_to_center: 1.072
+    left_edge_to_center: 0.926
+    right_edge_to_center: 0.926
+    height: 1.478
+  sensors:
+    sensor_models:
+    - lidar_model:
+        library:
+          vendor: velodyne
+          model: hdl_64e
+        name: lidar_0
+        mount:
+          px: 0.0
+          py: 0.0
+          pz: 3.0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        standard_params:
+          detector_params:
+            range: {min: 0, max: 90}
+        format:
+          data: ROS_TOPIC
+    - radar_model:
+        library:
+          vendor: continental
+          model: ars_408
+        name: radar_0
+        mount:
+          px: 3.0
+          py: 0.0
+          pz: 0.8
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        format:
+          data: PROTO_MSG
+    - camera_model:
+        library:
+          vendor: flir
+          model: point_grey_black_fly
+        name: camera_0
+        mount:
+          px: 0.7
+          py: -0.1
+          pz: 1.8
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        format:
+          data: ROS_TOPIC
+  external: {}
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4141157.2733108145
+          x: 587289.5337862186
+      start:
+        utm:
+          y: 4141182.955694316
+          x: 586951.5494212379
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4141182.955694316
+          x: 586951.5494212379
+      heading: 1.3193876004669882
+    initial_velocity_mps: 0
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 3
+    initial_state:
+      point:
+        utm:
+          y: 4141246.901433384
+          x: 586935.0320529139
+      speed_mps: 9
+      heading: -0.18509181433365818
+    behaviors:
+    - lane_keeping:
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 4
+    initial_state:
+      point:
+        utm:
+          y: 4141200.0228641955
+          x: 586955.8721774181
+      speed_mps: 5
+      heading: 1.2656740738983334
+    behaviors:
+    - simple_wait: true
+      until:
+        timeout:
+          secs: 1s
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141232.7806195635
+              x: 586971.2789061026
+        - point:
+            utm:
+              y: 4141229.048555971
+              x: 587006.9667642021
+        - point:
+            utm:
+              y: 4141213.187285705
+              x: 587069.7120833443
+        - point:
+            utm:
+              y: 4141200.358317107
+              x: 587120.0949418377
+        - point:
+            utm:
+              y: 4141191.2614121013
+              x: 587153.9167681411
+        - point:
+            utm:
+              y: 4141160.1404973683
+              x: 587277.184429701
+        - point:
+            utm:
+              y: 4141123.6891539046
+              x: 587305.1396900023
+        - point:
+            utm:
+              y: 4141091.643186895
+              x: 587297.0086237462
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4141364.0995122497
+          x: 586993.4100185194
+      speed_mps: 5
+      heading: -1.9211346559540177
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141341.4905074146
+              x: 586987.9593705201
+        - point:
+            utm:
+              y: 4141309.803844462
+              x: 586980.1647903285
+        - point:
+            utm:
+              y: 4141276.083812764
+              x: 586971.3535257642
+        - point:
+            utm:
+              y: 4141266.764206013
+              x: 586969.1507096231
+        - point:
+            utm:
+              y: 4141258.1223888444
+              x: 586968.3034726458
+        - point:
+            utm:
+              y: 4141247.6166503252
+              x: 586970.6757361824
+        - point:
+            utm:
+              y: 4141202.547754763
+              x: 587110.6737597963
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 5
+    initial_state:
+      point:
+        utm:
+          y: 4141404.2025378672
+          x: 587004.2931122737
+      speed_mps: 5
+      heading: -1.7932655097760395
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141318.4865146116
+              x: 586982.2186300774
+        - point:
+            utm:
+              y: 4141248.1788154854
+              x: 586970.5242915656
+        - point:
+            utm:
+              y: 4141211.0677802972
+              x: 587077.916259498
+        - point:
+            utm:
+              y: 4141198.943662104
+              x: 587125.0656080259
+        - point:
+            utm:
+              y: 4141195.8003722024
+              x: 587138.0878090478
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 6
+    initial_state:
+      point:
+        utm:
+          y: 4141481.629992836
+          x: 587023.516613781
+      speed_mps: 5
+      heading: -1.8555267653237855
+    behaviors:
+    - lane_keeping:
+        actions:
+        - distance: 0
+          modify_speed:
+            acceleration: 0
+        - duration: 100s
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 7
+    initial_state:
+      point:
+        utm:
+          y: 4141516.901392759
+          x: 587031.8589607994
+      speed_mps: 5
+      heading: -1.7634970854564376
+    behaviors:
+    - lane_keeping:
+        actions:
+        - distance: 0
+          modify_speed:
+            acceleration: 0
+        - duration: 100s
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 8
+    initial_state:
+      point:
+        utm:
+          y: 4141559.657725469
+          x: 587039.7041692049
+      speed_mps: 5
+      heading: -1.746735952249395
+    behaviors: []
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 10
+    initial_state:
+      point:
+        utm:
+          y: 4141580.0846817796
+          x: 587009.0637347394
+      speed_mps: 5
+      heading: -0.23537815125802464
+    behaviors:
+    - lane_keeping:
+        actions:
+        - distance: 0
+          modify_speed:
+            acceleration: 0
+        - duration: 100s
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 11
+    initial_state:
+      point:
+        utm:
+          y: 4141594.1729788175
+          x: 586953.9672366321
+      speed_mps: 5
+      heading: -0.15037142802722947
+    behaviors:
+    - lane_keeping:
+        actions:
+        - distance: 0
+          modify_speed:
+            acceleration: 0
+        - duration: 100s
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 12
+    initial_state:
+      point:
+        utm:
+          y: 4141611.9269210747
+          x: 586885.4131984288
+      speed_mps: 5
+      heading: -0.2782996591078959
+    behaviors:
+    - lane_keeping:
+        actions:
+        - distance: 0
+          modify_speed:
+            acceleration: 0
+        - duration: 100s
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 2
+    initial_state:
+      point:
+        utm:
+          y: 4141237.889812195
+          x: 586999.5466636358
+      speed_mps: 7
+      heading: 2.958365883349945
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141243.0847663116
+              x: 586982.2867856557
+        - point:
+            utm:
+              y: 4141275.396007672
+              x: 586974.9545875541
+        - point:
+            utm:
+              y: 4141310.978310042
+              x: 586984.0246623537
+        - point:
+            utm:
+              y: 4141349.845394026
+              x: 586993.9683905449
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 9
+    initial_state:
+      point:
+        utm:
+          y: 4141190.342615874
+          x: 587186.5944546243
+      speed_mps: 7
+      heading: 2.8392803239452964
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141208.3625649144
+              x: 587115.1559831813
+        - point:
+            utm:
+              y: 4141228.5219111876
+              x: 587036.5862233476
+        - point:
+            utm:
+              y: 4141240.669209583
+              x: 586988.513936081
+        - point:
+            utm:
+              y: 4141289.5168563216
+              x: 586978.951169259
+        - point:
+            utm:
+              y: 4141342.096609407
+              x: 586992.5893167867
+        - point:
+            utm:
+              y: 4141368.970664459
+              x: 586998.9125738806
+        - point:
+            utm:
+              y: 4141377.5296815704
+              x: 587000.92646026
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 13
+    initial_state:
+      point:
+        utm:
+          y: 4141202.1447865977
+          x: 587139.6896493338
+      speed_mps: 7
+      heading: 2.8769152054794076
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141212.7271642326
+              x: 587098.7042914252
+        - point:
+            utm:
+              y: 4141233.4359914716
+              x: 587016.5370091541
+        - point:
+            utm:
+              y: 4141251.8067253125
+              x: 586974.451327991
+        - point:
+            utm:
+              y: 4141321.9495272515
+              x: 586987.1438350084
+        - point:
+            utm:
+              y: 4141384.059106087
+              x: 587002.7184104531
+        - point:
+            utm:
+              y: 4141396.5017805253
+              x: 587006.2668467863
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 14
+    initial_state:
+      point:
+        utm:
+          y: 4141219.138410333
+          x: 587072.7677129519
+      speed_mps: 7
+      heading: 2.8590708026792417
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141236.3551385514
+              x: 587005.4391614051
+        - point:
+            utm:
+              y: 4141254.4899349897
+              x: 586973.2406452798
+        - point:
+            utm:
+              y: 4141287.428646888
+              x: 586978.7921135772
+        - point:
+            utm:
+              y: 4141337.3918615654
+              x: 586991.0053438316
+        - point:
+            utm:
+              y: 4141403.5238843476
+              x: 587008.0289973681
+        - point:
+            utm:
+              y: 4141421.3266957263
+              x: 587012.3615029339
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 15
+    initial_state:
+      point:
+        utm:
+          y: 4141225.243249981
+          x: 587047.5063075129
+      speed_mps: 7
+      heading: 2.876370627898955
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141240.8953444446
+              x: 586987.7070650073
+        - point:
+            utm:
+              y: 4141270.135707486
+              x: 586973.8405010907
+        - point:
+            utm:
+              y: 4141335.8511625687
+              x: 586990.4200883823
+        - point:
+            utm:
+              y: 4141363.584290402
+              x: 586997.3533703405
+        - point:
+            utm:
+              y: 4141434.9503038316
+              x: 587015.8114467968
+        - point:
+            utm:
+              y: 4141444.9331201157
+              x: 587018.1603447461
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 16
+    initial_state:
+      point:
+        utm:
+          y: 4141230.9270662046
+          x: 587026.2446246017
+      speed_mps: 7
+      heading: 2.9343756636460054
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141236.782099561
+              x: 587004.1189723819
+        - point:
+            utm:
+              y: 4141267.7964784424
+              x: 586973.1045935003
+        - point:
+            utm:
+              y: 4141330.6414040714
+              x: 586989.1558948513
+        - point:
+            utm:
+              y: 4141386.21742588
+              x: 587003.1500744116
+        - point:
+            utm:
+              y: 4141435.537528319
+              x: 587015.8114467968
+        - point:
+            utm:
+              y: 4141458.284750564
+              x: 587021.2599465759
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 17
+    initial_state:
+      point:
+        utm:
+          y: 4141217.5056420243
+          x: 587328.1939123874
+      speed_mps: 7
+      heading: -1.776191715986335
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141178.754980268
+              x: 587318.2490522906
+        - point:
+            utm:
+              y: 4141196.7586063053
+              x: 587160.5029955842
+        - point:
+            utm:
+              y: 4141233.658721307
+              x: 587013.8350723571
+        - point:
+            utm:
+              y: 4141296.0284835347
+              x: 586980.2022022149
+        - point:
+            utm:
+              y: 4141325.2764071557
+              x: 586988.3691408221
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 18
+    initial_state:
+      point:
+        utm:
+          y: 4141197.2729956205
+          x: 587323.221482339
+      speed_mps: 7
+      heading: -1.8313987185430673
+    behaviors:
+    - lane_following:
+        waypoints:
+        - point:
+            utm:
+              y: 4141170.6390600945
+              x: 587313.643751027
+        - point:
+            utm:
+              y: 4141173.0943650897
+              x: 587253.4887786543
+        - point:
+            utm:
+              y: 4141213.852428003
+              x: 587093.4028929931
+        - point:
+            utm:
+              y: 4141236.775335088
+              x: 587006.4023585701
+        - point:
+            utm:
+              y: 4141278.0704676867
+              x: 586976.015374205
+        - point:
+            utm:
+              y: 4141292.3934186203
+              x: 586979.7478191006
+        - point:
+            utm:
+              y: 4141333.023245089
+              x: 586989.7675994228

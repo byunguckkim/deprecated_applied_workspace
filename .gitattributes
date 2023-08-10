@@ -1,0 +1,2 @@
+maps/** filter=lfs diff=lfs merge=lfs -text
+start_docker.par filter=lfs diff=lfs merge=lfs -text

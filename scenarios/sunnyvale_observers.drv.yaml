@@ -1,0 +1,44 @@
+metadata:
+  scenario_version: v0.96
+map:
+  key: "sunnyvale"
+
+observers:
+  - name: "Max Velocity"
+    always: {motion: {fail_if_vel_above_mps: 7.0}}
+  - name: "Max Accel"
+    always: {motion: {fail_if_accel_above_mps2: 3.0}}
+  - name: "Max Decel"
+    always: {motion: {fail_if_decel_above_mps2: 4.0}}
+  - name: "Min Vehicle Dist"
+    always:
+        distance:
+          obstacle_a: {type : VEHICLE }
+          obstacle_b: {ego: true}
+          fail_if_below_m: 2.0
+  - name: "Min Ped Dist"
+    always:
+        distance:
+          obstacle_a: {type : PEDESTRIAN }
+          obstacle_b: {ego: true}
+          fail_if_below_m: 3.0
+  - name: "Min Bike Dist"
+    always:
+        distance:
+          obstacle_a: {type : BICYCLE }
+          obstacle_b: {ego: true}
+          fail_if_below_m: 2.0
+  - name: Travel Over 5m in first 4s
+    sequence:
+    - motion: {pass_if_travel_distance_above_m: 5}
+      within: {time: 4s, otherwise: FAIL_SCENARIO}
+
+# Shape of ego vehicle
+vehicle:
+  shape:
+    front_edge_to_center: 3.85
+    back_edge_to_center: 1.11
+    left_edge_to_center: 1.07
+    right_edge_to_center: 1.07
+    height: 1.478
+  external: {}

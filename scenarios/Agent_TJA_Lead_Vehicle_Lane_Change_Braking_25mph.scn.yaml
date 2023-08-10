@@ -1,0 +1,123 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: highway_cut_in
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+map:
+  key: straight_highway_2
+
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {y: 4500000, x: 500342.82649940555}}
+      start: {utm: {y: 4500000, x: 500037.5532699036}}
+agents:
+- ego:
+    initial_velocity_mps: 12
+    initial_position:
+      point: {utm: {y: 4500000, x: 500037.5532699036}}
+      heading: 0
+- obstacle:
+    behaviors:
+    - until:
+        region:
+          object:
+            ego:
+          relative_box:
+            x_range: [0, -20]
+            y_range: [0, 6]
+      lane_keeping:
+    - lane_change:
+        parametric:
+          destination_lane: '0'
+          curve_distance: 50
+          tangent_distance: 10
+        motion_profile:
+          phases:
+          - hold_velocity: {duration: 0.5}
+          - ramp_velocity: {target: 7.5, rate: -0.98}
+    - lane_keeping:
+        actions:
+        - duration: 10s
+          modify_speed:
+            acceleration: -3.3
+            speed_mps: 0
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499996
+          x: 500067.9512231757
+      speed_mps: 11.176
+      heading: 0
+    type: VEHICLE
+    id: 1
+- obstacle:
+    behaviors:
+    - lane_keeping:
+        actions:
+        - duration: 20s
+          modify_speed:
+            acceleration: 0
+            speed_mps: 11.176
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4500000
+          x: 500097.77656221
+      speed_mps: 11.176
+      heading: -0.004549589417427189
+    type: VEHICLE
+    id: 2
+metrics:
+- acceleration:
+    obstacle_id: 1
+- distance:
+    obstacle_a:
+      obstacle_id: 1
+    obstacle_b:
+      ego:
+observers:
+- name: Min Vehicle Distance
+  always:
+    distance:
+      obstacle_a:
+        obstacle_id: 1
+      obstacle_b:
+        ego:
+      fail_if_below_m: 1.5
+- name: Ego Lookahead Region
+# Creates a region in front of the ego with
+# length = minimum_length + speed * time_buffer
+  always:
+    lookahead_region:
+      minimum_length: 1
+      time_buffer: 0.2

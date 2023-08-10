@@ -1,0 +1,139 @@
+metadata:
+  tags: [sunnyvale]
+  scenario_version: v0.96
+  name: demo-rural-1
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+sim_end:
+  route_end: true
+  until:
+  - timeout: {secs: 25s}
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4140604.1189214317
+          x: 586885.9443474344
+      start:
+        utm:
+          y: 4140553.1232011034
+          x: 587030.2094421015
+agents:
+- ego:
+    initial_position:
+      heading: -0.45793871823969656
+      point:
+        utm:
+          y: 4140553.1232011034
+          x: 587030.2094421015
+- traffic:
+    name: rural
+    initial_time_gap: 15s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 5.0}
+    max_actors: 100
+    priming_duration: 40s
+    actors:
+    - behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          adaptive_cruise:
+            max_decel: 6
+            min_dist: 5
+            enforce_max_bounds: true
+            max_accel: 0.5
+            desired_time_gap: 5s
+          minimum_attractor_distance: 2
+          waypoints:
+          - point:
+              utm:
+                y: 4140608.3234452573
+                x: 586869.3537555437
+          constant_velocity:
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4140579.0076876744
+            x: 586958.3700987744
+        speed_mps: 4
+        heading: -0.2495635577260895
+      type: VEHICLE
+      id: 1
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        region:
+          object:
+            ego: true
+          point_radius:
+            radius: 2
+            point:
+              utm:
+                y: 4140555.2152337423
+                x: 587046.1361383309
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140576.50693909
+            x: 587046.503638099
+            heading: -1.6587997947970397
+            tangent_distance: 3.8092041797703318
+          - y: 4140574.0740328752
+            x: 587040.2185739526
+            heading: 2.4108727110925363
+            tangent_distance: 8.49460737478789
+          - y: 4140570.8152678777
+            x: 587030.7678412185
+            heading: -1.5541300882090918
+            tangent_distance: 13.394032217630436
+          - y: 4140567.020820403
+            x: 587035.1202956748
+            heading: 2.9181147378607863
+            tangent_distance: 2.5178517308632915
+    - simple_wait: true
+    model:
+      static:
+        point:
+        - y: 0.2
+          x: 0.5
+        - y: -0.2
+          x: 0.5
+        - y: -0.2
+          x: -0.5
+        - y: 0.2
+          x: -0.5
+        height: 0.3
+    initial_state:
+      point:
+        utm:
+          y: 4140584.765442417
+          x: 587041.1467710758
+      speed_mps: 2.4
+      heading: -1.6475682180713913
+    type: ANIMAL
+    id: 2

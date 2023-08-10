@@ -1,0 +1,133 @@
+metadata:
+  name: Occlusion example
+  scenario_version: v0.96
+  tags: [sunnyvale, occlusion]
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: sunnyvale
+
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587217.5361658748, y: 4140921.8723010416}}
+      dest:
+        utm:
+          y: 4140944.206450349
+          x: 587128.9980397071
+vehicle:
+  sensors:
+   lane_sensors:
+    - name: Ego Mounted Lane Sensor
+      sensor_view:
+        mount:
+          px: 3.0
+          py: 0.0
+          pz: 0.0
+          rpy:
+            roll: 0
+            pitch: 0
+            yaw: 0
+        sector_fov:
+          distance_near: 0.0
+          distance_far: 40.0
+          yaw_start: !math "0"
+          yaw_length: !math "pi * 2"  # Full 360 degree field of view
+      sensor_output:
+        reporting_frame: MAP
+      sensor_filters:
+      - actor_occlusion_lane_filter:
+          visualize: true
+sim_end:
+  until:
+  - timeout: {secs: 10s}
+
+observers:
+- name: "Max Velocity"
+  always: {motion: {fail_if_vel_above_mps: 7.1}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587217.5361658748, y: 4140921.8723010416}}
+      heading: -3.40
+    initial_velocity_mps: 0.0
+
+- obstacle:
+    behaviors: []
+    model: &pedestrian_model
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587168.0453711064
+          y: 4140939.035034327
+      speed_mps: 1.5
+      heading: 4.9688762436082765
+    type: PEDESTRIAN
+    id: 1
+- obstacle:
+    behaviors: []
+    model: *pedestrian_model
+    initial_state:
+      point:
+        utm:
+          x: 587170.5642652819
+          y: 4140938.4448416284
+      speed_mps: 1.5
+      heading: 3.8907781168004445
+    type: PEDESTRIAN
+    id: 2
+- obstacle:
+    behaviors: []
+    model: *pedestrian_model
+    initial_state:
+      point:
+        utm:
+          x: 587172.5022850685
+          y: 4140938.7256711703
+      speed_mps: 1.5
+      heading: 0
+    type: PEDESTRIAN
+    id: 3
+- obstacle:
+    behaviors: []
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587171.998561657
+          y: 4140936.7300080475
+      speed_mps: 7
+      heading: 3.2357008325056853
+    type: VEHICLE
+    id: 4

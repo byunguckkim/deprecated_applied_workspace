@@ -1,0 +1,155 @@
+metadata:
+  tags: [sunnyvale]
+  scenario_version: v0.96
+  name: right_turn_into_traffic
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+sim_end:
+  route_end: true
+  until:
+  - timeout: {secs: 25s}
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4140937.804109417
+          x: 587169.5998003128
+      start:
+        utm:
+          y: 4140945.063
+          x: 587258.06
+agents:
+- ego:
+    initial_position:
+      heading: -1.8242044221299283
+      point:
+        utm:
+          y: 4140945.063
+          x: 587258.06
+    initial_velocity_mps: 5
+- obstacle:
+    behaviors:
+    - lane_keeping: {}
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4140909.1414759425
+          x: 587279.7189749725
+      speed_mps: 10
+      heading: 2.84196022385067
+    type: VEHICLE
+    id: 1
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140936.487746969
+              x: 587174.777499404
+        minimum_attractor_distance: 2
+
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4140907.3675784343
+          x: 587285.2843849282
+      speed_mps: 10
+      heading: 2.825488275439353
+    type: VEHICLE
+    id: 2
+- obstacle:
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140911.9251822378
+            x: 587269.7626150171
+            heading: 2.97
+          - y: 4140911.183091235
+            x: 587258.5468600844
+            heading: -2.852
+          - y: 4140906.5684277797
+            x: 587251.7640166917
+            heading: -2.312
+          - y: 4140899.546923527
+            x: 587247.8932375584
+            heading: -1.878
+          - y: 4140857.076238685
+            x: 587236.0813035807
+            heading: -1.842
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4140905.6889891243
+          x: 587290.203894287
+      speed_mps: 10
+      heading: 2.8032112414012476
+    type: VEHICLE
+    id: 3
+observers:
+- name: Max Velocity
+  always:
+    motion:
+    # Add maximum velocity here
+      fail_if_vel_above_mps: 15
+- name: Min Vehicle Distance
+  always:
+    distance:
+      obstacle_a: {type: VEHICLE}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 0
+- name: Ego Lookahead Region
+# Creates a region in front of the ego with
+# length = minimum_length + speed * time_buffer
+  always:
+    lookahead_region:
+      minimum_length: 5
+      time_buffer: 1.0

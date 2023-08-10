@@ -1,0 +1,388 @@
+metadata:
+  name: "Many obstacles"
+  scenario_version: v0.96
+  tags: ["sunnyvale"]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: "sunnyvale"
+
+projection_settings:
+  utm:
+    zone: 10
+    north: true
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest:
+        utm:
+          y: 4140943.136465841
+          x: 587133.5708435975
+
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+
+observers:
+- name: "Max Velocity"
+  always: {motion: {fail_if_vel_above_mps: 16}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0
+- obstacle:
+    type: PEDESTRIAN
+    id: 0
+    model: &shape_medium
+      static:
+        height: 1.5
+        point:
+        - {x: 0.2, y: 0.2}
+        - {x: 0.2, y: -0.2}
+        - {x: -0.2, y: -0.2}
+        - {x: -0.2, y: 0.2}
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm: {x: 587265.9429173868, y: 4140907.408276162}
+    behaviors: []
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 1
+    model: &shape_tall
+      static:
+        height: 1.9
+        point:
+        - {x: 0.3, y: 0.3}
+        - {x: 0.3, y: -0.3}
+        - {x: -0.3, y: -0.3}
+        - {x: -0.3, y: 0.3}
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm: {x: 587260.733626125, y: 4140909.1238275263}
+    behaviors: []
+- obstacle:
+    type: BICYCLE
+    id: 2
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587255.5243348633
+          y: 4140910.8393788906
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 3
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587250.3150436016
+          y: 4140912.554930255
+    behaviors: []
+    model: &shape_small
+      static:
+        height: 1.2
+        point:
+        - {x: 0.2, y: 0.2}
+        - {x: 0.2, y: -0.2}
+        - {x: -0.2, y: -0.2}
+        - {x: -0.2, y: 0.2}
+- obstacle:
+    type: PEDESTRIAN
+    id: 4
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587245.1057523398
+          y: 4140914.270481619
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: PEDESTRIAN
+    id: 5
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587239.8964610781
+          y: 4140915.9860329833
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: BICYCLE
+    id: 6
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587234.6871698163
+          y: 4140917.7015843475
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: BICYCLE
+    id: 7
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587229.4778785546
+          y: 4140919.4171357118
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 8
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587224.2685872929
+          y: 4140921.132687076
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: PEDESTRIAN
+    id: 9
+    initial_state:
+      heading: 2.8234536635839156
+      point:
+        utm:
+          x: 587219.0592960311
+          y: 4140922.84823844
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 10
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587222.665875018
+          y: 4140918.340215281
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: BICYCLE
+    id: 11
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587213.9878933933
+          y: 4140920.8384219855
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: PEDESTRIAN
+    id: 12
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587205.3099117685
+          y: 4140923.33662869
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: PEDESTRIAN
+    id: 13
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587196.6319301438
+          y: 4140925.8348353943
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: PEDESTRIAN
+    id: 14
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587187.9539485191
+          y: 4140928.3330420987
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 15
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587179.2759668943
+          y: 4140930.831248803
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 16
+    initial_state:
+      heading: 2.861293010779012
+      point:
+        utm:
+          x: 587170.5979852696
+          y: 4140933.3294555075
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: PEDESTRIAN
+    id: 17
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587232.9216714835
+          y: 4140927.4690006813
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 18
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587226.5071028151
+          y: 4140928.887155615
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: BICYCLE
+    id: 19
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587220.0925341466
+          y: 4140930.3053105483
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: PEDESTRIAN
+    id: 20
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587213.6779654782
+          y: 4140931.723465482
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: BICYCLE
+    id: 21
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587207.2633968097
+          y: 4140933.1416204153
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: BICYCLE
+    id: 22
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587200.8488281412
+          y: 4140934.5597753488
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: BICYCLE
+    id: 23
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587194.4342594728
+          y: 4140935.9779302822
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: BICYCLE
+    id: 24
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587188.0196908043
+          y: 4140937.3960852157
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: PEDESTRIAN
+    id: 25
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587181.6051221358
+          y: 4140938.814240149
+    behaviors: []
+    model: *shape_medium
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 26
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587175.1905534674
+          y: 4140940.2323950827
+    behaviors: []
+    model: *shape_tall
+- obstacle:
+    type: PEDESTRIAN
+    id: 27
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587168.7759847989
+          y: 4140941.650550016
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: UNKNOWN_MOVABLE
+    id: 28
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587162.3614161304
+          y: 4140943.0687049497
+    behaviors: []
+    model: *shape_small
+- obstacle:
+    type: PEDESTRIAN
+    id: 29
+    initial_state:
+      heading: 2.9240091576183573
+      point:
+        utm:
+          x: 587155.946847462
+          y: 4140944.486859883
+    behaviors: []
+    model: *shape_tall

@@ -1,0 +1,298 @@
+actor_random_variables:
+  - var: random_vehicle_length
+    normal:
+      mean: 4.68056
+      std: 0.4
+  - var: random_truck_length
+    normal:
+      mean: 19.25
+      std: 2
+  - var: random_motorcycle_length
+    uniform:
+      min_value: 2.0
+      max_value: 2.9
+  - var: random_speed
+    normal:
+      mean: 26
+      std: 0.5
+  - var: random_politeness
+    normal:
+      mean: 0.5
+      std: 0.1
+actor_sources:
+- name: "Simple highway traffic"
+  required_random_variables:
+  - random_vehicle_length
+  - random_truck_length
+  - random_motorcycle_length
+  source:
+    random:
+      actors:
+      - percentage: 75
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_vehicle_length/2", y: 0.91 }
+              - { x: !math "$random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: 0.91 }
+          initial_state:
+            speed_mps: 26
+          type: VEHICLE
+      - percentage: 10
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+          model:
+            static:
+              height: 4.1
+              point:
+              - { x: !math "$random_truck_length/2", y: 1.3 }
+              - { x: !math "$random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: 1.3 }
+          initial_state:
+            speed_mps: 26
+          type: TRUCK
+      - percentage: 15
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_motorcycle_length/2", y: 0.45 }
+              - { x: !math "$random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: 0.45 }
+          initial_state:
+            speed_mps: 26
+          type: MOTORCYCLE
+- name: "ACC highway traffic"
+  required_random_variables:
+  - random_vehicle_length
+  - random_truck_length
+  - random_motorcycle_length
+  - random_speed
+  source:
+    random:
+      actors:
+      - percentage: 75
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 3
+                max_decel: 5
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_vehicle_length/2", y: 0.91 }
+              - { x: !math "$random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: 0.91 }
+          initial_state:
+            speed_mps: $random_speed
+          type: VEHICLE
+      - percentage: 10
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 500
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 2
+                max_decel: 3
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 4.1
+              point:
+              - { x: !math "$random_truck_length/2", y: 1.3 }
+              - { x: !math "$random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: 1.3 }
+          initial_state:
+            speed_mps: $random_speed
+          type: TRUCK
+      - percentage: 15
+        actor:
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 2
+                max_decel: 5
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_motorcycle_length/2", y: 0.45 }
+              - { x: !math "$random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: 0.45 }
+          initial_state:
+            speed_mps: $random_speed
+          type: MOTORCYCLE
+- name: "MOBIL highway traffic"
+  required_random_variables:
+  - random_vehicle_length
+  - random_truck_length
+  - random_motorcycle_length
+  - random_speed
+  - random_politeness
+  source:
+    random:
+      actors:
+      - percentage: 75
+        actor:
+          intelligence_models:
+          # Reactive lane change intelligence model snippet
+          - reactive_lane_change:
+              forward_gap_m: 10
+              backward_gap_m: 10
+              use_signals: true
+              trigger_conditions:
+              # MOBIL lane change trigger condition snippet for reactive lane change
+              - MOBIL_lane_change:
+                  politeness: $random_politeness
+                  lane_change_penalty: 1.0 # m/s^2
+                  max_deceleration: 5.0 # m/s^2
+                  MOBIL_perception_distance: 100 # m
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 3
+                max_decel: 5
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_vehicle_length/2", y: 0.91 }
+              - { x: !math "$random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: -0.91 }
+              - { x: !math "-1 * $random_vehicle_length/2", y: 0.91 }
+          initial_state:
+            speed_mps: $random_speed
+          type: VEHICLE
+      - percentage: 10
+        actor:
+          intelligence_models:
+          # Reactive lane change intelligence model snippet
+          - reactive_lane_change:
+              forward_gap_m: 10
+              backward_gap_m: 10
+              use_signals: true
+              trigger_conditions:
+              # MOBIL lane change trigger condition snippet for reactive lane change
+              - MOBIL_lane_change:
+                  politeness: 0.1
+                  lane_change_penalty: 1.0 # m/s^2
+                  max_deceleration: 3.0 # m/s^2
+                  MOBIL_perception_distance: 100 # m
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 500
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 2
+                max_decel: 3
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 4.1
+              point:
+              - { x: !math "$random_truck_length/2", y: 1.3 }
+              - { x: !math "$random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: -1.3 }
+              - { x: !math "-1 * $random_truck_length/2", y: 1.3 }
+          initial_state:
+            speed_mps: $random_speed
+          type: TRUCK
+      - percentage: 15
+        actor:
+          intelligence_models:
+          # Reactive lane change intelligence model snippet
+          - reactive_lane_change:
+              forward_gap_m: 10
+              backward_gap_m: 10
+              use_signals: true
+              trigger_conditions:
+              # MOBIL lane change trigger condition snippet for reactive lane change
+              - MOBIL_lane_change:
+                  politeness: $random_politeness
+                  lane_change_penalty: 1.0 # m/s^2
+                  max_deceleration: 5.0 # m/s^2
+                  MOBIL_perception_distance: 100 # m
+          behaviors:
+          - smooth_lane_keeping:
+              params:
+                distance: 5000
+              constant_velocity: {}
+              adaptive_cruise:
+                desired_time_gap: 2s
+                min_dist: 5
+                max_accel: 2
+                max_decel: 5
+                lookahead_dist: 100
+                enforce_max_bounds: true
+                use_exact_time_gap: true
+          model:
+            static:
+              height: 1.4279999732971191
+              point:
+              - { x: !math "$random_motorcycle_length/2", y: 0.45 }
+              - { x: !math "$random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: -0.45 }
+              - { x: !math "-1 * $random_motorcycle_length/2", y: 0.45 }
+          initial_state:
+            speed_mps: $random_speed
+          type: MOTORCYCLE

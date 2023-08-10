@@ -1,0 +1,178 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: demo_reactive_agent_static_obstacle
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout: {secs: 25s}
+map:
+  key: sunnyvale
+
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4141014.4292273237
+          x: 586869.7726317808
+      start: {utm: {x: 587051.7362411721, y: 4140967.846593394}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587051.7362411721, y: 4140967.846593394}}
+      heading: 2.894751111956209
+- static_obstacle:
+    scaling:
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    spectral_static_model: GENERIC_LARGE_BOX
+    model:
+      static:
+        point:
+        - y: -0.326
+          x: -0.326
+        - y: 0.326
+          x: -0.326
+        - y: 0.326
+          x: 0.326
+        - y: -0.326
+          x: 0.326
+        height: 0.686
+    initial_state:
+      pose_spec:
+        rpy:
+          roll: 0.0
+          pitch: 0.0
+          yaw: 1.7098925278971153
+        px: 586964.55953545
+        py: 4140990.086652781
+    type: UNKNOWN_UNMOVABLE
+    id: 1
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 5s
+        waypoints:
+        - point:
+            utm:
+              y: 4140991.969990349
+              x: 586957.1205502644
+        motion_profile:
+          phases:
+          - hold_velocity:
+              duration: 100
+        minimum_attractor_distance: 2
+      until_true:
+        compare:
+          x:
+            actor_motion:
+              actor_id: 2
+              velocity_magnitude: {}
+          less_than:
+            static_number: 2
+    - lane_change:
+        geometric:
+          endpoint:
+            longitudinal_offset: 30
+            lateral_offset: 3.75
+          center:
+            longitudinal_offset: 15
+            lateral_offset: 1.8
+        motion_profile:
+          phases:
+          - ramp_velocity:
+              target: 6
+              duration: 6
+          - hold_velocity:
+              duration: 20
+        experimental_bicycle_model:
+          yawrate_lower_bound: -0.5
+          yawrate_upper_bound: 0.5
+          velocity_lower_bound: -20
+          velocity_upper_bound: 20
+          acceleration_lower_bound: -3
+          acceleration_upper_bound: 3
+    - route_following:
+        tangent_distance: 0.2
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 3s
+        waypoints:
+        - point:
+            utm:
+              y: 4141012.7932915813
+              x: 586862.394062338
+        motion_profile:
+          phases:
+          - hold_velocity:
+              duration: 100
+        minimum_attractor_distance: 2
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587034.4133365925
+          y: 4140972.1587817213
+      speed_mps: 7
+      heading: 2.899922510791388
+    type: VEHICLE
+    id: 2
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4141015.8591997754
+              x: 586850.201838407
+        motion_profile:
+          phases:
+          - hold_velocity:
+              duration: 100
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587017.5917588084
+          y: 4140972.848353146
+      speed_mps: 5
+      heading: 2.8850027351003806
+    type: VEHICLE
+    id: 3

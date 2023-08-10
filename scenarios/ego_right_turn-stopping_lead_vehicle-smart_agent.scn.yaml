@@ -1,0 +1,124 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+metadata:
+  name: Lane following adaptive cruise control actors
+  scenario_version: v0.96
+  tags: [sunnyvale, smart_agent, demo]
+
+map: {key: sunnyvale}
+sim_end: {until: [timeout: {secs: 40s}]}
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587218.5582976959, y: 4140785.9091160386}}
+      dest: {utm: {y: 4140783.5406423733, x: 587062.1548795127}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587218.5582976959, y: 4140785.9091160386}}
+      heading: -1.8273129440381906
+
+- traffic:
+    name: traffic
+    initial_time_gap: 10s
+    initial_min_distance_gap_m: 10
+    actors:
+    - behaviors:
+      - route_following:
+          tangent_distance: 0.2
+          adaptive_cruise:
+            max_decel: 3
+            min_dist: 5
+            enforce_max_bounds: true
+            max_accel: 3
+            desired_time_gap: 5s
+          minimum_attractor_distance: 2
+          waypoints:
+          - point:
+              utm:
+                y: 4140785.02230534
+                x: 587056.9532918272
+          constant_velocity:
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            x: 587215.6435234027
+            y: 4140773.431619422
+        speed_mps: 5
+        heading: -1.8273114773016739
+      type: VEHICLE
+      id: 1
+- obstacle:
+    behaviors:
+    - simple_wait:
+      until:
+        timeout:
+          secs: 6s
+    - path_following:
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 5s
+        pose_b_spline:
+          default_tangent_distance: 1
+          poses:
+          - y: 4140765.5137027516
+            x: 587151.1932528045
+            heading: -2.556
+          - y: 4140764.3738242723
+            x: 587147.2801558838
+            heading: -2.479
+          - y: 4140759.332668072
+            x: 587143.9193850835
+            heading: -2.297
+          - y: 4140754.5106925764
+            x: 587138.5129277093
+            heading: -2.787
+          - y: 4140754.656813046
+            x: 587131.2799644653
+            heading: 3.121
+        constant_velocity:
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587154.4400588928
+          y: 4140769.122739534
+      speed_mps: 1.5
+      heading: 4.291263362243627
+    type: PEDESTRIAN
+    id: 2

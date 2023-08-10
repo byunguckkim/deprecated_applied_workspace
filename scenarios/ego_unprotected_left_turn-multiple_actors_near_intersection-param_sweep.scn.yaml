@@ -1,0 +1,165 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: Unprotected Left Turn
+  scenario_version: v0.96
+  tags: [sunnyvale, unprotected_left, param_sweep]
+sim_end:
+  until:
+  - timeout: {secs: 30s}
+map:
+  key: sunnyvale
+
+# Examples with named variables for stepping through numbers and
+# lists of values.
+parameter_sweeps:
+- step:
+    var: vehicle_speed
+    first_value: 0.6
+    delta: 2.1
+    num_steps: 5
+    label: speed
+
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4140783.292161792
+          x: 587225.6678197252
+      start:
+        utm:
+          y: 4140748.8982461127
+          x: 587172.6647138848
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          y: 4140748.8982461127
+          x: 587172.6647138848
+      heading: -0.2347226124733175
+    initial_velocity_mps: 0
+- obstacle:
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    type: VEHICLE
+    id: 1
+    initial_state:
+      point:
+        utm:
+          y: 4140739.3934103386
+          x: 587236.6578947738
+      speed_mps: $vehicle_speed
+      heading: 2.898006958705315
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4140775.3291408033
+              x: 587094.4670506383
+        minimum_attractor_distance: 2
+- obstacle:
+    model:
+      static:
+        height: 1.65
+        point:
+        - {x: 0, y: 0.35}
+        - {x: 0.2, y: 0.25}
+        - {x: 0.2, y: -0.25}
+        - {x: 0, y: -0.35}
+        - {x: -0.2, y: -0.25}
+        - {x: -0.2, y: 0.25}
+    type: PEDESTRIAN
+    id: 2
+    initial_state:
+      point:
+        utm:
+          y: 4140738.4997668434
+          x: 587186.0140613441
+      speed_mps: 1.5
+      heading: 1.0278582482842047
+    behaviors:
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4140743.60286278
+              x: 587188.0871940685
+        - point:
+            utm:
+              y: 4140753.0116959135
+              x: 587191.4361007769
+        - point:
+            utm:
+              y: 4140756.9747083895
+              x: 587193.3267579535
+- obstacle:
+    model:
+      static:
+        height: 1.65
+        point:
+        - {x: 0, y: 0.35}
+        - {x: 0.2, y: 0.25}
+        - {x: 0.2, y: -0.25}
+        - {x: 0, y: -0.35}
+        - {x: -0.2, y: -0.25}
+        - {x: -0.2, y: 0.25}
+    type: PEDESTRIAN
+    id: 3
+    initial_state:
+      point:
+        utm:
+          y: 4140757.28348512
+          x: 587229.864120765
+      speed_mps: 1.5
+      heading: 2.875340604479808
+    behaviors:
+    - waypoint_following:
+        relative_waypoints:
+        - point:
+            utm:
+              y: 4140759.4711185596
+              x: 587221.6604953674
+        - point:
+            utm:
+              y: 4140761.9322061785
+              x: 587213.4568699697
+        - point:
+            utm:
+              y: 4140764.256566708
+              x: 587204.9797903921
+observers:
+- name: Min Vehicle Distance
+  always:
+    distance:
+      obstacle_a: {type: VEHICLE}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 4
+- name: Min Pedestrian Distance
+  always:
+    distance:
+      obstacle_a: {type: PEDESTRIAN}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 5
+- name: Max Velocity
+  always:
+    motion:
+        # Add maximum velocity here
+      fail_if_vel_above_mps: 7
+- name: Max Acceleration
+  always:
+    motion:
+        # Add maximum acceleration here
+      fail_if_accel_above_mps2: 2

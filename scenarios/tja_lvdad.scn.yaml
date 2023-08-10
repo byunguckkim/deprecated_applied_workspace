@@ -1,0 +1,134 @@
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: tja_LVDAD
+  scenario_version: v0.96
+sim_end:
+  until:
+  - timeout:
+      secs: 60s
+map:
+  key: straight_highway_3
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          x: 500010
+          'y': 4500000
+      start:
+        utm:
+          x: 500000
+          'y': 4500000
+agents:
+- ego:
+    initial_position:
+      point:
+        utm:
+          x: 500000
+          'y': 4500000
+      heading: 0
+- obstacle:
+    behaviors:
+    - lane_following:
+        waypoints:
+        - adaptive_cruise:
+            max_decel: 3
+            min_dist: 5
+            desired_speed: 13
+            max_accel: 5
+            desired_time_gap: 3.5s
+          point:
+            utm:
+              y: 4499996
+              x: 500496.2405940146
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499996
+          x: 500027.7337279767
+      speed_mps: 11.176
+      heading: 0
+    type: VEHICLE
+    id: 1
+- obstacle:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499996
+          x: 500043.2400519485
+      speed_mps: 11.176
+      heading: 0
+    type: VEHICLE
+    id: 2
+    behaviors:
+    - lane_keeping:
+        actions:
+        - duration: 5s
+          modify_speed:
+            acceleration: 3
+            speed_mps: 11.176
+    - path_following:
+        polyline:
+          points:
+          - {x: 500998.53579072957, y: 4499995.434884295}
+        motion_profile:
+          phases:
+          - ramp_acceleration: {target: -2.943, duration: 0.5}
+          - ramp_velocity: {target: 0, rate: -2.943} #0.3g decel to 0kph
+          - hold_velocity: {duration: 5}
+          - ramp_acceleration: {target: 1.246, duration: 0.5}
+          - ramp_velocity: {target: 11.176, rate: 1.2446} #0.127g accel to test speed
+          - hold_velocity: {duration: 5}
+          - ramp_acceleration: {target: -5.886, duration: 0.5}
+          - ramp_velocity: {target: 0, rate: -5.886} #0.3g decel to 0kph
+          - hold_velocity: {duration: 1}
+    - lane_keeping:
+metrics:
+- speed:
+    obstacle_id: 1
+- acceleration:
+    obstacle_id: 1
+- speed:
+    obstacle_id: 2
+- acceleration:
+    obstacle_id: 2
+- distance:
+    obstacle_a:
+      obstacle_id: 1
+    obstacle_b:
+      obstacle_id: 2
+observers:
+- name: Min Vehicle Distance
+  always:
+    distance:
+      obstacle_a: {obstacle_id: 1}
+      obstacle_b: {obstacle_id: 2}
+      fail_if_below_m: 1.5

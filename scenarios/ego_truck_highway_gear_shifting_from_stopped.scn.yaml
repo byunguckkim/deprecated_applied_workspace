@@ -1,0 +1,85 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+metadata:
+  name: truck_highway_gear_shifting_from_stopped
+  scenario_version: v0.96
+  tags:
+  - truck
+  - highway
+sim_end:
+  until:
+  - timeout: {secs: 100s}
+map:
+  key: straight_highway_1_long
+
+
+vehicle:
+  mesh_name: applied:cab
+  shape:
+    front_edge_to_center: 7.5
+    back_edge_to_center: 1.1
+    left_edge_to_center: 1.3
+    right_edge_to_center: 1.3
+    height: 3.5
+  trailers:
+  - trailer_hitch_x: 9.0
+    mesh_name: applied:trailer
+    hitch_angle: 0.0
+    shape:
+      axis_aligned_box:
+        z_upper: 3.4
+        y_lower: -1.3
+        z_lower: 0
+        x_upper: 11.7
+        y_upper: 1.3
+        x_lower: -1.8
+  lagrangian_bicycle_with_trailer:
+    wheel_radius: 0.33 # 0.33 [m] radius is 26 [inch] diameter
+    tractor_mass: 5443 # 12,000 lb
+    trailer_mass: 30844 # 30844 = 68,000 lb (max total load 80,000 lb)
+    frontal_area: 11.05 # 8.5 ft x 14 ft
+    drag_coef: 0.6 # educated guess
+    air_density: 1.225
+    friction_bias_coef: 0.013 # from book
+    friction_vel_coef: 0.0000065 # from book
+    max_deceleration: 2.5 # educated guess
+    wheelbase: 3.8
+    max_steering_angle: 0.25 # educated guess
+    max_steering_rate: 0.8 # educated guess
+    axle_ratio: 4.25
+    gear_ratios:
+      predefined: EPA_13_SPEED
+    torque_map:
+      predefined: TRUCK_455HP
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest: {utm: {x: 500010, y: 4500000}}
+      start: {utm: {x: 500000, y: 4500000}}
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 500000, y: 4500000}}
+      heading: 0
+
+extra_data:
+  motion_command_sequence:
+  - normalized_dbw_gear:
+    - {duration: 0.5, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 1}
+    - {duration: 0.5, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 2}
+    - {duration: 0.5, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 3}
+    - {duration: 1.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 4}
+    - {duration: 2.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 5}
+    - {duration: 3.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 6}
+    - {duration: 4.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 7}
+    - {duration: 5.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 8}
+    - {duration: 6.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 9}
+    - {duration: 10.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 10}
+    - {duration: 12.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 11}
+    - {duration: 15.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 12}
+    - {duration: 50.0, throttle: 1.0, brake: 0.0, steering: 0.0, gear: 13}
+
+metrics:
+- gear:
+    ego: {}

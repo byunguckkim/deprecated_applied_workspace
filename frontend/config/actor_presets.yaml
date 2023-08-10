@@ -1,0 +1,91 @@
+actor_presets:
+###### Vehicles #####
+- name: "Sedan"
+  model:
+    static:
+      point:
+      - {y: 0.91599994897, x: 2.40825009346}
+      - {y: -0.91599994897, x: 2.40825009346}
+      - {y: -0.91599994897, x: -2.40825009346}
+      - {y: 0.91599994897, x: -2.40825009346}
+      height: 1.4279999732971191
+  type: VEHICLE
+  speed_mps: 7.0
+  spectral_model: GENERIC_SEDAN
+- name: "SUV"
+  model:
+    static:
+      point:
+      - {y: 0.93, x: 2.29124999046}
+      - {y: -0.93, x: 2.29124999046}
+      - {y: -0.93, x: -2.29124999046}
+      - {y: 0.93, x: -2.29124999046}
+      height: 1.6449999809265137
+  type: VEHICLE
+  speed_mps: 7.0
+  spectral_model: GENERIC_SUV
+- name: "Pickup"
+  model:
+    static:
+      point:
+      - {y: 1.02799999714, x: 3.23699998856}
+      - {y: -1.02799999714, x: 3.23699998856}
+      - {y: -1.02799999714, x: -3.23699998856}
+      - {y: 1.02799999714, x: -3.23699998856}
+      height: 1.959999918937683
+  type: VEHICLE
+  speed_mps: 7.0
+  spectral_model: GENERIC_PICKUP_WHITE
+- name: "Van"
+  model:
+    static:
+      point:
+      - {y: 0.98769056797, x: 2.74419975281}
+      - {y: -0.98769056797, x: 2.74419975281}
+      - {y: -0.98769056797, x: -2.74419975281}
+      - {y: 0.98769056797, x: -2.74419975281}
+      height: 2.040569543838501
+  type: VEHICLE
+  speed_mps: 7.0
+  spectral_model: GENERIC_VAN
+###### Pedestrians #####
+- name: "Man"
+  model:
+    static:
+      height: 1.65
+      point:
+      - x: 0.0
+        y: 0.35
+      - x: 0.2
+        y: 0.25
+      - x: 0.2
+        y: -0.25
+      - x: 0.0
+        y: -0.35
+      - x: -0.2
+        y: -0.25
+      - x: -0.2
+        y: 0.25
+  type: PEDESTRIAN
+  speed_mps: 1.5
+  spectral_model: GENERIC_MALE
+- name: "Woman"
+  model:
+    static:
+      height: 1.65
+      point:
+      - x: 0.0
+        y: 0.35
+      - x: 0.2
+        y: 0.25
+      - x: 0.2
+        y: -0.25
+      - x: 0.0
+        y: -0.35
+      - x: -0.2
+        y: -0.25
+      - x: -0.2
+        y: 0.25
+  type: PEDESTRIAN
+  speed_mps: 1.5
+  spectral_model: GENERIC_FEMALE

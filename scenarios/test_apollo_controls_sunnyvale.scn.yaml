@@ -1,0 +1,48 @@
+include:
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+metadata:
+  name: test_apollo_controls
+  scenario_version: v0.96
+
+sim_end:
+  until:
+  - timeout: {secs: 40s}
+
+map:
+  key: sunnyvale
+
+vehicle:
+  mesh_name: applied:car
+  shape:
+    front_edge_to_center: 3.89  # from apollo mkz8 example
+    back_edge_to_center: 1.043  # from apollo mkz8 example
+    left_edge_to_center: 1.055  # from apollo mkz8 example
+    right_edge_to_center: 1.055 # from apollo mkz8 example
+    height: 1.48                # from apollo mkz8 example
+  kinematic_bicycle:
+    wheelbase: 2.8448           # from apollo mkz8 example
+    max_velocity: 20.0
+    max_acceleration: 2.0       # from apollo mkz8 example
+    max_deceleration: 6.0       # from apollo mkz8 example
+    max_steering_angle: 0.51269 # converted from apollo mkz8 example
+    max_steering_rate: 0.43633  # converted from apollo mkz8 example
+
+extra_data:
+  use_controller: True
+  wheelbase: 2.8448           # from apollo mkz8 example
+  max_acceleration: 2.0       # from apollo mkz8 example
+  max_deceleration: 6.0       # from apollo mkz8 example
+  max_steering_angle: 0.51269 # converted from apollo mkz8 example
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 586710.2943528547, y: 4141050.6270242278}}
+      dest: {utm: {x: 586497.0678372134, y: 4140991.34898102}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 586624.2114528794, y: 4141069.573858147}}
+      heading: 2.8

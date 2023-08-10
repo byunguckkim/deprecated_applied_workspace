@@ -1,0 +1,93 @@
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+metadata:
+  name: "Ego right turn, bicycle crossing crosswalk, parameter sweep"
+  scenario_version: v0.96
+  tags: ["sunnyvale", "bicycle", "param_sweep"]
+
+map: {key: "sunnyvale"}
+sim_end:
+ until:
+ - timeout: {secs: 20s}
+
+observers:
+- name: "Min Vehicle Distance"
+  always:
+    distance:
+      obstacle_a: {type: VEHICLE}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 5.5
+- name: "Min Pedestrian Distance"
+  always:
+    distance:
+      obstacle_a: {type: PEDESTRIAN}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 2.5
+- name: "Min Bicycle Distance"
+  always:
+    distance:
+      obstacle_a: {type: BICYCLE}
+      obstacle_b: {ego: true}
+      fail_if_below_m: 2.5
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587258.06, y: 4140945.57}}
+      dest:
+        utm:
+          y: 4140930.776636283
+          x: 587196.9860902473
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+
+- obstacle:
+    behaviors:
+    - simple_wait:
+      until:
+        timeout:
+          secs:
+            3s
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140921.9674528064
+            x: 587267.1149793009
+            heading: -0.236
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 1.5
+        - y: -0.35
+          x: 1.5
+        - y: -0.35
+          x: -1.5
+        - y: 0.35
+          x: -1.5
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587244.1494520886
+          y: 4140927.4791793376
+      speed_mps: $obstacle_speed
+      heading: 0
+    type: BICYCLE
+    id: 1
+# Examples with named variables for stepping through numbers and
+# lists of values.
+parameter_sweeps:
+- step:
+    var: obstacle_speed
+    first_value: 0.6
+    delta: 2.1
+    num_steps: 3

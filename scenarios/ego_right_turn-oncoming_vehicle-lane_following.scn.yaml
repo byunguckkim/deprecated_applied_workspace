@@ -1,0 +1,82 @@
+metadata:
+  name: Lane following agent going through an intersection
+  scenario_version: v0.96
+  tags: ["sunnyvale", "lane_following"]
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+- file: scenario://workspace/include/global_observers.inc.yaml
+
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587257.7462796876, y: 4140944.6043055537}}
+      dest: {utm: {x: 586948.74, y: 4141171.12}}
+
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+
+observers:
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587257.7462796876, y: 4140944.6043055537}}
+      heading: -1.8296895407832667
+    initial_velocity_mps: 0.0
+- obstacle:
+    behaviors:
+    - hide:
+      until:
+        region:
+          object:
+            ego: true
+          point_radius:
+            radius: 3
+            point:
+              utm:
+                y: 4140937.390958796
+                x: 587255.8625443416
+    - route_following:
+        tangent_distance: 0.2
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 5s
+          lookahead_dist: 100
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4140939.8714689934
+              x: 587161.4807066154
+        constant_velocity:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587334.6577452448
+          y: 4140886.687625514
+      speed_mps: 15
+      heading: 2.683610718240258
+    type: VEHICLE
+    id: 1

@@ -1,0 +1,291 @@
+metadata:
+  name: Left turn following vehicle with jaywalking pedestrians
+  scenario_version: v0.96
+  tags: ["sunnyvale", "unprotected_left", "distance_trigger"]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 586710.2943528547, y: 4141050.6270242278}}
+      dest: {utm: {x: 586497.0678372134, y: 4140991.34898102}}
+
+sim_end:
+  until:
+  - timeout: {secs: 40s}
+
+observers:
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+- name: Driveable region
+  always: {region: {on_driveable_surface: true}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 586624.2114528794, y: 4141069.573858147}}
+      heading: 2.8
+    initial_velocity_mps: 0
+- obstacle:
+    id: 1
+    type: VEHICLE
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    initial_state:
+      point: {utm: {x: 586611.8443201293, y: 4141073.4965051278}}
+      heading: 2.8027377445989154
+      speed_mps: 7
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4141028.6827474567
+              x: 586506.4413205707
+        minimum_attractor_distance: 2
+
+- obstacle:
+    id: 2
+    type: VEHICLE
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    initial_state:
+      point:
+        utm:
+          y: 4141025.8984204987
+          x: 586512.9549035266
+      heading: 1.3135980506745089
+      speed_mps: 7
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4141066.0771109834
+              x: 586579.7754677716
+        minimum_attractor_distance: 2
+- obstacle:
+    id: 3
+    type: VEHICLE
+    model:
+      static:
+        height: 1.5
+        point:
+        - {x: 2.3, y: 0.9}
+        - {x: 2.3, y: -0.9}
+        - {x: -2.3, y: -0.9}
+        - {x: -2.3, y: 0.9}
+    initial_state:
+      point:
+        utm:
+          y: 4141159.238099708
+          x: 586464.8846500157
+      heading: -0.8380221916049635
+      speed_mps: 7
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        constant_velocity:
+        waypoints:
+        - point:
+            utm:
+              y: 4141166.2462696177
+              x: 586549.4212643001
+        minimum_attractor_distance: 2
+
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141086.756274168
+            x: 586537.1368253718
+            heading: -2.083
+    model: &ped_model
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 586553.6796337262
+          y: 4141113.0290547586
+      speed_mps: 1.5
+      heading: -1.9824385514490366
+    type: PEDESTRIAN
+    id: 4
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141086.180662886
+            x: 586538.4007896187
+            heading: -2.083
+    model: *ped_model
+    initial_state:
+      point:
+        utm:
+          x: 586552.5203063274
+          y: 4141114.955828212
+      speed_mps: 1.5
+      heading: -1.9824385514490366
+    type: PEDESTRIAN
+    id: 5
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141085.119941602
+            x: 586536.9497903578
+            heading: -2.083
+    model: *ped_model
+    initial_state:
+      point:
+        utm:
+          x: 586551.1845619788
+          y: 4141114.4058158332
+      speed_mps: 1.5
+      heading: -1.9824385514490366
+    type: PEDESTRIAN
+    id: 6
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141085.78098304
+            x: 586532.2498776318
+            heading: -0.4530005226235602
+            tangent_distance: 1.8645216437017187
+    model: *ped_model
+    initial_state:
+      point:
+        utm:
+          x: 586517.0723272267
+          y: 4141090.804681744
+      speed_mps: 1.5
+      heading: -0.46872977362489254
+    type: PEDESTRIAN
+    id: 7
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141086.792442952
+            x: 586531.7263441649
+            heading: 0.06801892791967394
+            tangent_distance: 2.1469179124926736
+    model: *ped_model
+    initial_state:
+      point:
+        utm:
+          x: 586516.8773107567
+          y: 4141094.2004812364
+      speed_mps: 1.5
+      heading: -0.46872977362489254
+    type: PEDESTRIAN
+    id: 8
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 30
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4141084.906105813
+            x: 586531.6973235935
+            heading: -0.44332580881077477
+            tangent_distance: 1.9047145631517362
+    model: *ped_model
+    initial_state:
+      point:
+        utm:
+          x: 586517.138495899
+          y: 4141092.6914115255
+      speed_mps: 1.5
+      heading: -0.46872977362489254
+    type: PEDESTRIAN
+    id: 9

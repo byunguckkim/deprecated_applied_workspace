@@ -1,0 +1,86 @@
+metadata:
+  name: Ego right turn, stopped vehicle in lane accelerates
+  scenario_version: v0.96
+  tags: ["sunnyvale", "distance_trigger", "lane_keeping", "demo"]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587230.164101032, y: 4140922.228726389}}
+      dest:
+        utm:
+          y: 4140985.655562539
+          x: 586982.066037563
+
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587230.164101032, y: 4140922.228726389}}
+      heading: 2.885871440482153
+    initial_velocity_mps: 0.0
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 15
+    - route_following:
+        tangent_distance: 0.2
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4140975.4823118877
+              x: 587021.3656756991
+        motion_profile:
+          phases:
+          - ramp_velocity:
+              rate: 2
+              target: 11.1 #25mph
+          - hold_velocity:
+              duration: 100
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587157.4102746629
+          y: 4140940.9070640695
+      speed_mps: 0
+      heading: 2.8914344339362366
+    type: VEHICLE
+    id: 1
+
+observers:
+- name: Max Velocity
+  always: {motion: {fail_if_vel_above_mps: 16.0}}
+- name: "Max Acceleration"
+  always: {motion: {fail_if_accel_above_mps2: 20.0}}
+- name: "Max Deceleration"
+  always: {motion: {fail_if_decel_above_mps2: 20.0}}
+- name: "Max Jerk"
+  always: {motion: {fail_if_jerk_above_mps3: 200.0}}

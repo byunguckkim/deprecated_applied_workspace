@@ -1,0 +1,19 @@
+observers:
+  - name: "Min Vehicle Distance"
+    always:
+        distance:
+          obstacle_a: { type : VEHICLE }
+          obstacle_b: { ego: true }
+          fail_if_below_m: 0.5
+  - name: "Min Pedestrian Distance"
+    always:
+        distance:
+          obstacle_a: { type : PEDESTRIAN }
+          obstacle_b: { ego: true }
+          fail_if_below_m: 1.8
+  - name: "Min Bicycle Distance"
+    always:
+        distance:
+          obstacle_a: { type : BICYCLE }
+          obstacle_b: { ego: true }
+          fail_if_below_m: .7

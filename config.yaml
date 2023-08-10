@@ -1,0 +1,9 @@
+default_simulation_flags: '--customer_server_run_cmd="/simian/customer_stack_server.par" --no_default_customer_server --v1api'
+default_cluster_hostname: "demo.applied.dev"
+enable_strada: true
+enable_vantage: true
+enable_yaml_to_gui: true
+client_config:
+- cluster_hostname: "demo.applied.dev"
+  public_services_hostname: "grpc.demo.applied.dev"
+container_name: apollo_prebuilt

@@ -1,0 +1,112 @@
+metadata:
+  name: Left turn with adjacent bicycle
+  scenario_version: v0.96
+  tags: [sunnyvale, bicycle, cut_in]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+map:
+  key: sunnyvale
+
+sim_end:
+  until:
+  - timeout: {secs: 40s}
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4140719.4481417327
+          x: 587289.9845425589
+      start:
+        utm:
+          y: 4140841.8233276736
+          x: 587232.1368406073
+          z: 0
+agents:
+- ego:
+    initial_velocity_mps: 0
+    initial_position:
+      heading: -1.8287689809558734
+      point:
+        utm:
+          y: 4140841.8233276736
+          x: 587232.1368406073
+- obstacle:
+    behaviors:
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140819.320872757
+            x: 587224.5470295128
+            heading: -1.863
+          - y: 4140813.405486643
+            x: 587222.9000570081
+            heading: -1.805
+          - y: 4140807.01147406
+            x: 587222.1408527704
+            heading: -1.3696112753771525
+            tangent_distance: 1.5402977094372885
+          - y: 4140802.302730437
+            x: 587222.9761254566
+            heading: -1.399
+          - y: 4140795.1913952944
+            x: 587223.8219684509
+            heading: -1.6790260926332634
+            tangent_distance: 1.612520120408253
+          - y: 4140788.715141795
+            x: 587222.3733327998
+            heading: -1.802
+          - y: 4140776.813052511
+            x: 587219.3064636467
+            heading: -1.83
+          - y: 4140758.5494347066
+            x: 587214.3632297877
+            heading: -1.685
+          - y: 4140747.01703224
+            x: 587216.0670723328
+            heading: -1.181
+          - y: 4140740.4002764523
+            x: 587220.9205660316
+            heading: -0.6406783138447452
+            tangent_distance: 2.044380075088334
+          - y: 4140735.635721725
+            x: 587227.7041259409
+            heading: -0.492
+          - y: 4140731.722910939
+            x: 587237.8611562612
+            heading: -0.349
+          - y: 4140728.225346911
+            x: 587248.0373421791
+            heading: -0.339
+          - y: 4140723.100341821
+            x: 587264.1445010329
+            heading: -0.284
+          - y: 4140718.1835094043
+            x: 587282.4441473887
+            heading: -0.262
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 1.5
+        - y: -0.35
+          x: 1.5
+        - y: -0.35
+          x: -1.5
+        - y: 0.35
+          x: -1.5
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          x: 587228.0317111841
+          y: 4140833.177984715
+      speed_mps: 5
+      heading: -1.823265755819371
+    type: BICYCLE
+    id: 1

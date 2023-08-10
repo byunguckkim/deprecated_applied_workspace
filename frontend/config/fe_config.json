@@ -1,0 +1,134 @@
+{
+   "name": "apollo",
+   "defaultTilingLayoutName": "Default",
+   "showAssociationMetrics": true,
+   "drivesEnabled": true,
+   "enableSearchByImageUrl": true,
+   "numberOfFramesInBatch": 5,
+   "linkToLatest": [
+      "master"
+   ],
+   "showLogstreamPage": true,
+   "editWhileRunning": true,
+   "updateWhilePaused": true,
+   "themeSwitcher": false,
+   "messageKeys": [
+      "Velocity",
+      "Lights",
+      "KAI",
+      "Route"
+   ],
+   "actorChannelObstacles": {
+      "LIDAR_perceived_actors": {
+         "color": "#F96E4C"
+      },
+      "RADAR_00_perceived_actors": {
+         "color": "#1070FC"
+      },
+      "RADAR_01_perceived_actors": {
+         "color": "#7B66FF"
+      },
+      "RADAR_02_perceived_actors": {
+         "color": "#F58403"
+      }
+   },
+   "comparisonActorChannelObstacles": [
+      {
+         "LIDAR_perceived_actors": {
+            "color": "#F96E4C"
+         },
+         "RADAR_perceived_actors": {
+            "color": "#1070FC"
+         }
+      },
+      {
+         "LIDAR_perceived_actors": {
+            "color": "#F96E4C"
+         },
+         "RADAR_perceived_actors": {
+            "color": "#1070FC"
+         }
+      }
+   ],
+   "pipelineConfig": {
+     "pipelineDriveFilterDashboardUuid": "2636befb-c01f-51a9-8f38-de0078b8ec00",
+     "eventMarkers": {
+      "Disengage": "disengage_marker.svg",
+      "ACC Suspended": "suspended_marker.svg",
+      "ACC Override": "override_marker.svg"
+     },
+     "cameraOptions": [
+      {
+         "name": "CAM_BACK",
+         "displayName": "Camera Back",
+         "index": 0,
+         "defaultTilingIndex": 4
+      },
+      {
+         "name": "CAM_BACK_LEFT",
+         "displayName": "Camera Back Left",
+         "index": 1,
+         "defaultTilingIndex": 5
+      },
+      {
+         "name": "CAM_BACK_RIGHT",
+         "displayName": "Camera Back Right",
+         "index": 2,
+         "defaultTilingIndex": 6
+      },
+      {
+         "name": "CAM_FRONT",
+         "displayName": "Camera Front",
+         "index": 3,
+         "defaultTilingIndex": 0
+      },
+      {
+         "name": "CAM_FRONT_LEFT",
+         "displayName": "Camera Front Left",
+         "index": 4,
+         "defaultTilingIndex": 1
+      },
+      {
+         "name": "CAM_FRONT_RIGHT",
+         "displayName": "Camera Front Right",
+         "index": 5,
+         "defaultTilingIndex": 3
+      }
+      ],
+      "defaultOverlayOpacity": 0.7,
+      "useLegacyExplorePage": false
+   },
+   "lidar": {
+      "field": "LIDAR_FIELD_Z",
+      "size": 1,
+      "colormapping": {
+        "colormap": "VIRIDIS"
+      }
+    },
+    "vantageConfig": {
+      "abstractScenariosEnabled": true
+    },
+    "plotHeight": 150,
+    "vehicles": {
+      "airplane:a320" : {
+         "vehicle_name" : "Airplane A320",
+         "meshProperties" : {
+            "mtl" : "A320_coloured.mtl",
+            "obj" : "A320_2.obj",
+            "scale" : {
+               "y" : 0.02,
+               "z" : 0.02,
+               "x" : 0.02
+            },
+            "textures" : {}
+         },
+         "shape" : {
+            "right_edge_to_center" : 17.05,
+            "left_edge_to_center" : 17.05,
+            "height" : 10.01,
+            "front_edge_to_center" : 17.71,
+            "back_edge_to_center" : 19.86
+         }
+      }
+   }
+}

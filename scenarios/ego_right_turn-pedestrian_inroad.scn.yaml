@@ -1,0 +1,60 @@
+metadata:
+  name: "Ego right turn, pedestrian in road"
+  scenario_version: v0.96
+  tags: ["sunnyvale"]
+
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: "sunnyvale"
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest: {utm: {x: 586948.74, y: 4141171.12}}
+
+sim_end:
+  until:
+  - timeout: {secs: 20s}
+
+observers:
+- name: "Max Velocity"
+  always: {motion: {fail_if_vel_above_mps: 16}}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0
+- obstacle:
+    behaviors: []
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587216.5749967219
+          y: 4140926.820259703
+      speed_mps: 1.5
+      heading: 4.796193955872742
+    type: PEDESTRIAN
+    id: 1

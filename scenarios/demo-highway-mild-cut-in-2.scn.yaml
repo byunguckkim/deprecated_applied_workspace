@@ -1,0 +1,307 @@
+include:
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+metadata:
+  scenario_version: v0.96
+  name: demo-highway
+sim_end:
+  until:
+  - timeout:
+      secs: 15s
+map:
+  key: straight_highway_5
+
+trip_agent:
+  behavior:
+  - generate_route:
+      dest:
+        utm:
+          y: 4499992
+          x: 500218.11586162297
+      start:
+        utm:
+          y: 4499992
+          x: 500120.4801220455
+agents:
+- ego:
+    initial_position:
+      heading: 0
+      point:
+        utm:
+          y: 4499992
+          x: 500120.4801220455
+- traffic:
+    name: lane2
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 1.0}
+    max_actors: 100
+    priming_duration: 10s
+    actors:
+    - behaviors:
+      - lane_following:
+          waypoints:
+          - adaptive_cruise:
+              max_decel: 3
+              min_dist: 5
+              desired_speed: 5
+              max_accel: 1
+              desired_time_gap: 1s
+            point:
+              utm:
+                y: 4499996
+                x: 500331.8516583328
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4499996
+            x: 500086.955488473
+        speed_mps: 7
+        heading: 0
+      type: VEHICLE
+      id: 1
+- traffic:
+    name: lane1
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 1.0}
+    max_actors: 100
+    priming_duration: 6s
+    actors:
+    - behaviors:
+      - lane_following:
+          waypoints:
+          - adaptive_cruise:
+              max_decel: 3
+              min_dist: 5
+              desired_speed: 5
+              max_accel: 1
+              desired_time_gap: 1s
+            point:
+              utm:
+                y: 4500000
+                x: 500331.41994094837
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4500000
+            x: 500087.04746724886
+        speed_mps: 7
+        heading: 0
+      type: VEHICLE
+      id: 6
+- traffic:
+    name: lane3
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 1.0}
+    max_actors: 100
+    priming_duration: 17s
+    actors:
+    - behaviors:
+      - lane_following:
+          waypoints:
+          - adaptive_cruise:
+              max_decel: 3
+              min_dist: 5
+              desired_speed: 5
+              max_accel: 1
+              desired_time_gap: 1s
+            point:
+              utm:
+                y: 4499992
+                x: 500331.64875412604
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4499992
+            x: 500086.90092537
+        speed_mps: 7
+        heading: 0
+      type: VEHICLE
+      id: 2
+- traffic:
+    name: lane5
+    initial_time_gap: 3s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 1.0}
+    max_actors: 100
+    priming_duration: 7s
+    actors:
+    - behaviors:
+      - lane_following:
+          waypoints:
+          - adaptive_cruise:
+              max_decel: 3
+              min_dist: 5
+              desired_speed: 5
+              max_accel: 1
+              desired_time_gap: 1s
+            point:
+              utm:
+                y: 4499984
+                x: 500331.87756730366
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4499984
+            x: 500087.50509360415
+        speed_mps: 7
+        heading: 0
+      type: VEHICLE
+      id: 5
+- traffic:
+    name: lane4
+    initial_time_gap: 12s
+    initial_min_distance_gap_m: 10
+    randomize:
+      actor_order: true
+      seed: 1
+      initial_gap: {std_dev: 1.0}
+    max_actors: 100
+    priming_duration: 10s
+    actors:
+    - behaviors:
+      - lane_following:
+          waypoints:
+          - adaptive_cruise:
+              max_decel: 3
+              min_dist: 5
+              desired_speed: 5
+              max_accel: 1
+              desired_time_gap: 1s
+            point:
+              utm:
+                y: 4499988
+                x: 500331.87756730366
+      model:
+        static:
+          point:
+          - y: 0.9
+            x: 2.3
+          - y: -0.9
+            x: 2.3
+          - y: -0.9
+            x: -2.3
+          - y: 0.9
+            x: -2.3
+          height: 1.5
+      initial_state:
+        point:
+          utm:
+            y: 4499988
+            x: 500087.27628042654
+        speed_mps: 7
+        heading: 0
+      type: VEHICLE
+      id: 3
+- obstacle:
+    behaviors:
+    - route_following:
+        tangent_distance: 0.2
+        adaptive_cruise:
+          max_decel: 3
+          min_dist: 5
+          enforce_max_bounds: true
+          max_accel: 3
+          desired_time_gap: 1s
+        minimum_attractor_distance: 2
+        waypoints:
+        - point:
+            utm:
+              y: 4499988
+              x: 500265.41308274603
+        constant_velocity:
+      until:
+        motion:
+          trigger_vel_above_mps: 3.5
+    - lane_change:
+        parametric:
+          destination_lane: "2"
+          curve_distance: 15
+          tangent_distance: 2.0
+        constant_velocity:
+    - lane_keeping:
+    model:
+      static:
+        point:
+        - y: 0.9
+          x: 2.3
+        - y: -0.9
+          x: 2.3
+        - y: -0.9
+          x: -2.3
+        - y: 0.9
+          x: -2.3
+        height: 1.5
+    initial_state:
+      point:
+        utm:
+          y: 4499988
+          x: 500117.6342746526
+      speed_mps: 3.5
+      heading: 0
+    type: VEHICLE
+    id: 4

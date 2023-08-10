@@ -1,0 +1,13 @@
+metadata:
+  tags: [sunnyvale]
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+
+map:
+  key: sunnyvale
+
+sim_end:
+  route_end: true
+  until:
+  - timeout: {secs: 25s}

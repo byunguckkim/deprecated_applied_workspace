@@ -1,0 +1,83 @@
+metadata:
+  name: "Pedestrian cuts off ego"
+  scenario_version: v0.96
+  tags: ["sunnyvale", "distance_trigger"]
+
+include:
+- file: scenario://workspace/include/vehicle_shape.inc.yaml
+- file: scenario://workspace/include/global_observers.inc.yaml
+- file: scenario://workspace/include/projection_settings.inc.yaml
+
+map:
+  key: sunnyvale
+
+trip_agent:
+  behavior:
+  - generate_route:
+      start: {utm: {x: 587316.81, y: 4141172.35}}
+      dest: {utm: {x: 586948.74, y: 4141171.12}}
+
+sim_end: {until: [timeout: {secs: 15s}]}
+
+agents:
+- ego:
+    initial_position:
+      point: {utm: {x: 587258.06, y: 4140945.57}}
+      heading: -1.828
+    initial_velocity_mps: 0.0
+- obstacle:
+    behaviors:
+    - simple_wait: true
+      until:
+        distance:
+          obstacle_a:
+            ego: true
+          trigger_below_m: 10
+    - path_following:
+        constant_velocity:
+        pose_b_spline:
+          default_tangent_distance: 3
+          poses:
+          - y: 4140915.981535242
+            x: 587226.8480084826
+            heading: -2.074
+    - simple_wait: true
+    model:
+      static:
+        point:
+        - y: 0.35
+          x: 0.0
+        - y: 0.25
+          x: 0.2
+        - y: -0.25
+          x: 0.2
+        - y: -0.35
+          x: 0.0
+        - y: -0.25
+          x: -0.2
+        - y: 0.25
+          x: -0.2
+        height: 1.65
+    initial_state:
+      point:
+        utm:
+          x: 587232.3869278969
+          y: 4140929.6236886145
+      speed_mps: 2
+      heading: -1.9789454305467653
+    type: PEDESTRIAN
+    id: 1
+
+observers:
+- name: "Max Wait"
+  always:
+    fail_if_ego_wait_exceeds: 5s
+- name: "Max Velocity"
+  always:
+    motion:
+      fail_if_vel_above_mps: 16.0
+- name: Min Jerk
+  always:
+    motion:
+    # Add minimum jerk here
+      fail_if_jerk_below_mps3: -4
